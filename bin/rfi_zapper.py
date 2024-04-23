@@ -139,7 +139,7 @@ def flag_rfi(filename,
     channels = np.arange(nchan)
 
 
-    nstart = np.rint(tstart / tsamp).astype(np.int)
+    nstart = np.rint(tstart / tsamp).astype(np.int32)
 
     if verbosity:
         print(f"Opening data. Getting {ngulp} samples...")
