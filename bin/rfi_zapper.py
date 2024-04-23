@@ -151,7 +151,7 @@ def flag_rfi(filename,
 
     mask = your.utils.rfi.sk_sg_filter(data, filfile, sk_sig, sg_win, sg_sig)
 
-    mask = rfi_mask(data,mask)
+    mask = rfi_mask(data.T,mask)
 
     if verbosity:
         print(f"Done.")
