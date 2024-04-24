@@ -278,4 +278,5 @@ if __name__ == '__main__':
                         outdir = args.output_dir,
                         fswap = args.fswap)
 
-   os.sytem(cmd)
+
+    os.sytem(cmd)
