@@ -22,8 +22,9 @@ def make_for_fetch(filfile, canddir, outdir, mask = " ", dms = [0,1000], snr = 6
         with open(file_path, 'r') as cand_file:
             for line in cand_file:
                 # Split the line by spaces
-                values = line.split()
-                print(values)
+                v = line.split()
+                snr, toa, boxcar, dm, members = float(v[0]), float(v[2]), int(v[3]), float(v[5]), int(v[6])
+                print(snr,toa,boxcar,dm,members)
 
 
 if __name__ == '__main__':
