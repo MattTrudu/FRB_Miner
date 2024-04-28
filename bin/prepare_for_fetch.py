@@ -56,4 +56,4 @@ if __name__ == '__main__':
     dms      = args.dm
     nmemb    = args.n_members
 
-    make_for_fetch(filfile, canddir, outdir, mask = mask, dms = dm, snr = snr, Nmember = nmemb)
+    make_for_fetch(filfile, canddir, outdir, mask = mask, dms = dms, snr = snr, Nmember = nmemb)
