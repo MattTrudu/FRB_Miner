@@ -24,7 +24,7 @@ def grab_subband(filename, outdir, outname, chanstart = 0, chanpersub = 1):
     fstart = fil.header.fch1 + chanstart*fil.header.foff
     #print(fstart)
     name = os.path.join(outdir, outname)
-    out_file = fil.header.prepOutfile(name,
+    out_file = fil.header.prep_outfile(name,
                                              {"nchans":chanpersub,
                                               "fch1": fstart },
                                               back_compatible=back_compatible, nbits=fil.header.nbits)
