@@ -26,7 +26,7 @@ def make_for_fetch(filfile, canddir, outdir, mask = " ", dms = [0,1000], snr = 6
                 sn, toa, boxcar, dm, members = float(v[0]), float(v[2]), int(v[3]), float(v[5]), int(v[6])
 
                 if sn >= snr and dms[0] <= dm <= dms[1] and members <= Nmember:
-                    f"{filfile},{snr},{toa},{boxcar},{dm},{mask}"
+                    string = f"{filfile},{snr},{toa},{boxcar},{dm},{mask}\n"
                     #"%s,%.5f,%.5f,%0d,%.5f,0,%s,1\n"%(filfile, snr[lineidx], tcand[lineidx], filter[lineidx], dm[lineidx], mask
                     filecsv.write(string)
 
