@@ -4,7 +4,7 @@ setup(
     name='FRB_Miner',
     version='0.1',
     packages=find_packages(),
-    scripts=['bin/rfi_zapper.py', 'bin/launch_heimdall.py'],
+    scripts=['bin/rfi_zapper.py', 'bin/launch_heimdall.py', 'bin/subband_filterbank.py'],
     author='Matteo Trudu',
     author_email='matteo.trudu@inaf.it',
     description='FRB searcher and analyser',
