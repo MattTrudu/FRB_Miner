@@ -4,7 +4,7 @@ import os
 import argparse
 import csv
 
-def make_for_fetch(filfile, canddir, mask = " ", outdir, dms = [0,1000], snr = 6, Nmember = 20):
+def make_for_fetch(filfile, canddir, outdir, mask = " ", dms = [0,1000], snr = 6, Nmember = 20):
 
     cand_files = [file for file in os.listdir(canddir) if file.endswith(".cand")]
 
