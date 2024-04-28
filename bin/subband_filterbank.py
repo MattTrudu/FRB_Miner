@@ -30,7 +30,7 @@ def grab_subband(filename, outdir, outname, chanstart = 0, chanpersub = 1):
                                               back_compatible=back_compatible, nbits=fil.header.nbits)
 
 
-    for nsamps, ii, data in fil.readPlan(gulp,verbose = False):
+    for nsamps, ii, data in fil.read_plan(gulp,verbose = False):
         #for out_file in enumerate(out_files):
             data = data.reshape(nsamps, fil.header.nchans)
             subband_ar = data[:,chanstart:chanstart+chanpersub]
