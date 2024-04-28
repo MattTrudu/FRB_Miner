@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import os
 import sys
-#from sigpyproc.Filterbank import Filterbank
-from sigpyproc.Readers import FilReader
+from sigpyproc.base import Filterbank
+from sigpyproc.readers import FilReader
 import time
 import numpy as np
 import argparse
