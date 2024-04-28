@@ -16,7 +16,7 @@ def make_for_fetch(filfile, canddir, outdir, mask = " ", dms = [0,1000], snr = 6
 # Loop through each .cand file
 
     for fname in cand_files:
-        file_path = os.path.join(folder_path, fname)
+        file_path = os.path.join(canddir, fname)
 
         # Open .cand file and extract specified columns
         with open(file_path, 'r') as cand_file:
