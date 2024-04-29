@@ -15,6 +15,8 @@ def main(args):
 
 
     subband_search = config_data['subband_search']
+
+    #RFI
     mask_name = config_data["mask_name"]
     time_start = config_data["time_start"]
     nsamps_gulp = config_data['nsamps_gulp']
@@ -22,6 +24,21 @@ def main(args):
     sg_sigma = config_data['sg_sigma']
     sg_window = config_data['sg_window']
     plot = config_data['plot']
+
+    #Heimdall
+
+    dm = config_data['dm']
+    dm_tolerance = config_data['dm_tolerance']
+    boxcar_max: = config_data['boxcar_max']
+    baseline_length = config_data['baseline_length']
+    gpu_id = config_data['gpu_id']
+    rfi_no_narrow = config_data['rfi_no_narrow']
+    rfi_no_broad = config_data['rfi_no_broad']
+    no_scrunching = config_data['no_scrunching']
+    scrunching_tol = config_data['scrunching_tol']
+    rfi_tol: config_data['rfi_tol']
+    nsamps_gulp: config_data['nsamps_gulp']
+    fswap: config_data['fswap']
 
     filename   = args.file
     outdir     = args.output_dir
@@ -37,6 +54,25 @@ def main(args):
         mkdir_p(outdir)
         rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -tstart {time_start} -ngulp {nsamps_gulp} -p {plot} -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
         file.write(rficmd+"\n")
+
+        heimdallcmd = launch_heimdall(
+        filename,
+        dm_tol = dm_tolerance,
+        ngulp = nsamps_gulp,
+        boxcar_max = boxcar_max,
+        baseline_length = baseline_length,
+        DM = dm,
+        mask = os.path.join(outdir,mask_name)+".bad_chans",
+        rfi_no_narrow = rfi_no_narrow,
+        rfi_no_broad = rfi_no_broad,
+        no_scrunching = no_scrunching,
+        rfi_tol = rfi_tol,
+        gpu_id = None,
+        verbosity = None,
+        scrunch_tol = scrunching_tol,
+        outdir = outdir,
+        fswap = fswap)
+        file.write(heimdallcmd+"\n")
     file.close()
 
 
