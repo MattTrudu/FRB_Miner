@@ -30,7 +30,7 @@ def plan_subbands(filename, fthresh = 100, overlap=False, output_dir = os.getcwd
 
     for level in itertools.count(s):
         f_delim = np.linspace(flo**(-2), fhi**(-2), 2**level+1)**(-0.5)
-
+        flag = False
 
         for i in range(2**level-s):
             f0, f1 = f_delim[i], f_delim[i+s+1]
@@ -38,14 +38,14 @@ def plan_subbands(filename, fthresh = 100, overlap=False, output_dir = os.getcwd
                 subbands.append((nchan - 1 - np.searchsorted(freqs[::-1], f1), nchan - 1 - np.searchsorted(freqs[::-1], f0)))
                 #subbands.append((f0, f1))
                 #yield f0, f1
+                flag = True
 
+        if not flag:
+            subbands = np.array(subbands)
+    print("Subbands:")
+    print(subbands)
 
-
-        subbands = np.array(subbands)
-        print("Subbands:")
-        print(subbands)
-
-        np.save(os.path.join(output_dir, output_name),subbands)
+    np.save(os.path.join(output_dir, output_name),subbands)
 
 
 def _get_parser():
