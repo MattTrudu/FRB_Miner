@@ -29,16 +29,16 @@ def main(args):
 
     dm = config_data['dm']
     dm_tolerance = config_data['dm_tolerance']
-    boxcar_max: = config_data['boxcar_max']
+    boxcar_max = config_data['boxcar_max']
     baseline_length = config_data['baseline_length']
     gpu_id = config_data['gpu_id']
     rfi_no_narrow = config_data['rfi_no_narrow']
     rfi_no_broad = config_data['rfi_no_broad']
     no_scrunching = config_data['no_scrunching']
     scrunching_tol = config_data['scrunching_tol']
-    rfi_tol: config_data['rfi_tol']
-    nsamps_gulp: config_data['nsamps_gulp']
-    fswap: config_data['fswap']
+    rfi_tol = config_data['rfi_tol']
+    nsamps_gulp = config_data['nsamps_gulp']
+    fswap = config_data['fswap']
 
     filename   = args.file
     outdir     = args.output_dir
