@@ -25,7 +25,10 @@ def main(args):
 
     filename   = args.file
     outdir     = args.output_dir
+    pipename   = args.pipeline_name
 
+    filepipeline = os.path.join(outdir, pipename)
+    file = open(filepipeline, "w")
 
     if subband_search == False:
         dirname =  os.path.splitext(os.path.basename(filename))[0]
@@ -33,7 +36,9 @@ def main(args):
         outdir = os.path.join(outdir, dirname)
         mkdir_p(outdir)
         rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -tstart {time_start} -ngulp {nsamps_gulp} -p {plot} -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
-        print(rficmd)
+        file.write(rficmd+"\n")
+    file.close()
+
 
 def _get_parser():
     """
@@ -65,6 +70,13 @@ def _get_parser():
         help = "Output directory",
         type = str,
         default = os.getcwd(),
+    )
+    parser.add_argument(
+        "-n",
+        "--pipeline_name",
+        help = "Name of the pipeline bash script",
+        type = str,
+        default = "pipeline.sh",
     )
     return parser.parse_args()
 
