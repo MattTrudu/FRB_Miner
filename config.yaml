@@ -17,7 +17,7 @@ overlap: True
 #RFI Exicision
 mask_name: "mask"
 time_start: 0
-nsamps_gulp: 8192
+nsamps_gulpr: 8192
 sk_sigma: 5
 sg_sigma: 5
 sg_window: 43

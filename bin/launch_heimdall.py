@@ -53,7 +53,7 @@ def launch_heimdall(filename,
 
         cmd = cmd + f" -dm {np.min(DM)} {np.max(DM)}"
 
-    if baseline_length:
+    if baseline_length is not None:
 
         cmd = cmd + f" -baseline_length {baseline_length}"
 
@@ -62,37 +62,37 @@ def launch_heimdall(filename,
         bmax = np.rint(bmax / tsamp).astype(np.int32)
         cmd = cmd + f" -boxcar_max {bmax}"
 
-    if ngulp:
+    if ngulp is not None:
         cmd = cmd + f" -nsamps_gulp {ngulp}"
 
     if fswap == True:
         cmd = cmd + f" -fswap"
 
-    if rfi_tol:
+    if rfi_tol is not None:
         cmd = cmd + f" -rfi_tol {rfi_tol}"
 
-    if rfi_no_narrow:
+    if rfi_no_narrow is not None:
         cmd = cmd + f" -rfi_no_narrow"
 
-    if rfi_no_broad:
+    if rfi_no_broad is not None:
         cmd = cmd + f" -rfi_no_broad"
 
-    if no_scrunching:
+    if no_scrunching is not None:
         cmd = cmd + f" -no_scrunching"
 
     if dm_tol:
         cmd = cmd + f" -dm_tol {dm_tol}"
 
-    if gpu_id:
+    if gpu_id is not None:
         cmd = cmd + f" -gpu_id {gpu_id}"
 
-    if verbosity:
+    if verbosity is not None:
         cmd = cmd + f" -{verbosity}"
 
     if outdir:
         cmd = cmd + f" -output_dir {outdir}"
 
-    if scrunch_tol:
+    if scrunch_tol is not None:
         cmd = cmd + f" -output_dir {scrunch_tol}"
 
     if mask:
