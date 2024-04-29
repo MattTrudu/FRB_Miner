@@ -62,7 +62,7 @@ def main(args):
         computing_time = config_data['computing_time']
         jobname = pipename.replace(".sh","")
         file.write(f"#!/bin/bash\n")
-        file.write(f"#SBATCH --job-name = {jobname}\n")
+        file.write(f"#SBATCH --job-name={jobname}\n")
         file.write(f"#SBATCH --nodes={n_nodes}\n")
         file.write(f"#SBATCH --ntasks-per-node=1\n")
         file.write(f"#SBATCH --gres=gpu:1\n")
@@ -70,8 +70,8 @@ def main(args):
         file.write(f"#SBATCH --time={computing_time}\n")
 
         file.write("module purge\n")
-        file.write("module load python/3.8.13")
-        file.write("module load pulsar/heimdallGPU")
+        file.write("module load python/3.8.13\n")
+        file.write("module load pulsar/heimdallGPU\n")
 
     if subband_search == False:
         dirname =  os.path.splitext(os.path.basename(filename))[0]
