@@ -4,6 +4,8 @@ import sys
 import numpy as np
 import yaml
 import argparse
+from bin.launch_heimdall import launch_heimdall
+from utils import mkdir_p
 
 def main(args):
 
@@ -15,8 +17,20 @@ def main(args):
     with open(configfile, 'r') as yaml_file:
         config_data = yaml.safe_load(yaml_file)
 
+
     subband_search = config_data['subband_search']
-    print(subband_search)
+    mask_name = config_data["mask_name"]
+    time_start = config_data["time_start"]
+    nsamps_gulp = config_data['nsamps_gulp']
+    sk_sigma = config_data['sk_sigma']
+    sg_sigma = config_data['sg_sigma']
+    sg_window = config_data['sg_window']
+    plot = config_data['plot']
+    if subbanded_search == False:
+        dirname =  os.path.splitext(os.path.basename(filename))[0]
+        outdir = mkdir_p(os.path.join(outdir, dirname))
+        rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -o {outdir} -tstart{time_start} -ngulp {nsamps_gulp} -p {plot} -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
+        print(rficmd)
 
 def _get_parser():
     """

@@ -3,6 +3,15 @@ import os
 import numpy as np
 
 
+def mkdir_p(path):
+
+    try:
+        os.makedirs(path)
+    except OSError:
+        if not os.path.isdir(path):
+            raise
+
+
 def cluster_channels(badchans):
 
     maxgap = 1
@@ -85,3 +94,50 @@ def dedisperse_array(array, DM, freq, dt, ref_freq = "top"):
     for i,ts in enumerate(array):
         dedisp_data[i] = np.roll(ts, shift[i])
     return dedisp_data
+
+def plan_subbands(filename, fthresh = 100, overlap=False, save = True, output_dir = os.getcwd(),output_name = "subbands.npy"):
+
+    filfile = your.Your(filename)
+
+    tsamp     = filfile.your_header.native_tsamp
+    nsamp     = filfile.your_header.native_nspectra
+    nchan     = filfile.your_header.native_nchans
+    foff      = filfile.your_header.foff
+    fch0      = filfile.your_header.fch1
+    tstartutc = filfile.your_header.tstart_utc
+
+    bw = nchan * foff
+    fc = fch0 + bw/2
+    freqs = np.arange(fc - bw / 2, fc + bw / 2, foff)
+
+    flo = freqs.min()
+    fhi = freqs.max()
+
+    channels = np.arange(nchan)
+
+    subbands = []
+    s = 1 if overlap else 0
+
+    for level in itertools.count(s):
+        f_delim = np.linspace(flo**(-2), fhi**(-2), 2**level+1)**(-0.5)
+        flag = False
+
+        for i in range(2**level-s):
+            f0, f1 = f_delim[i], f_delim[i+s+1]
+            if f1-f0 >= fthresh:
+                subbands.append((nchan - 1 - np.searchsorted(freqs[::-1], f1), nchan - 1 - np.searchsorted(freqs[::-1], f0)))
+                #print(f0,f1)
+                #subbands.append((f0, f1))
+                #yield f0, f1
+                flag = True
+
+        if not flag:
+            return np.save(os.path.join(output_dir, output_name),np.array(subbands))
+
+            #print("Subbands:")
+            #print(subbands)
+            if save == True:
+                np.save(os.path.join(output_dir, output_name),subbands)
+            else:
+                return subbands
+            #np.savetxt(os.path.join(output_dir, output_name.replace(".npy",".txt")),subbands)
