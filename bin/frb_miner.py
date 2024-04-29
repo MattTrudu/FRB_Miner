@@ -81,7 +81,7 @@ def main(args):
         if plot == True:
             rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -tstart {time_start} -ngulp {nsamps_gulpr} -p -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
         else:
-            rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -tstart {time_start} -ngulp {nsamps_gulpr} -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"    
+            rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -tstart {time_start} -ngulp {nsamps_gulpr} -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
         file.write(rficmd+"\n")
         maskpath = os.path.join(outdir,mask_name)+".bad_chans"
         heimdallcmd = f"launch_heimdall.py -f {filename} -o {outdir} -dm {dm[0]} {dm[1]} -m {maskpath} -box_max {boxcar_max} -dm_tol {dm_tolerance}"
@@ -112,7 +112,7 @@ def main(args):
         fetchcmd = f"predict.py -c {outdir} -m {model} -p {probability}"
         file.write(fetchcmd+"\n")
         results = os.path.join(outdir, f"results_{model}.csv" )
-        ploth5cmd = f"your_h5plotter.py -c {results} -o {outdir}"
+        ploth5cmd = f"your_h5plotter.py -c {results} -o {outdir}/"
         file.write(ploth5cmd+"\n")
         file.write(f"rm -f {outdir}/*.h5 \n")
 
