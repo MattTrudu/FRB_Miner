@@ -43,10 +43,11 @@ def plan_subbands(filename, fthresh = 100, overlap=False, output_dir = os.getcwd
         if not flag:
             subbands = np.array(subbands)
 
-    print("Subbands:")
-    print(subbands)
+            #print("Subbands:")
+            #print(subbands)
 
-    np.save(os.path.join(output_dir, output_name),subbands)
+            np.save(os.path.join(output_dir, output_name),subbands)
+            np.savetxt(os.path.join(output_dir, output_name.replace(".npy",".txt")),subbands)
 
 
 def _get_parser():
