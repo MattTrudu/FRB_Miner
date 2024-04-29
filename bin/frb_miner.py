@@ -26,7 +26,7 @@ def main(args):
     sg_sigma = config_data['sg_sigma']
     sg_window = config_data['sg_window']
     plot = config_data['plot']
-    if subbanded_search == False:
+    if subband_search == False:
         dirname =  os.path.splitext(os.path.basename(filename))[0]
         outdir = mkdir_p(os.path.join(outdir, dirname))
         rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -o {outdir} -tstart{time_start} -ngulp {nsamps_gulp} -p {plot} -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
