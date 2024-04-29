@@ -8,7 +8,8 @@ from bin.launch_heimdall import launch_heimdall
 from utils import mkdir_p
 
 def main(args):
-
+    configfile = args.config
+    
     with open(configfile, 'r') as yaml_file:
         config_data = yaml.safe_load(yaml_file)
 
@@ -23,9 +24,7 @@ def main(args):
     plot = config_data['plot']
 
     filename   = args.file
-    configfile = args.config
     outdir     = args.output_dir
-
 
 
     if subband_search == False:
