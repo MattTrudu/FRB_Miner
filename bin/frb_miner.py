@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os
-import sys 
+import sys
 import numpy as np
 import yaml
 import argparse
@@ -10,10 +10,12 @@ def main(args):
     filename   = args.file
     configfile = args.config
     outdir     = args.output_dir
-    config_data = yaml.safe_load(configfile)
+
+
+    with open(configfile, 'r') as yaml_file:
+        config_data = yaml.safe_load(yaml_file)
 
     subband_search = config_data['subband_search']
-
     print(subband_search)
 
 def _get_parser():
