@@ -10,9 +10,13 @@ def make_for_fetch(filfile, canddir, outdir, mask = " ", dms = [0,1000], snr = 6
 
     filename = f"cand_forfetch.csv"
     filename = os.path.join(outdir, filename)
+    filename_full = f"heimdall_result.csv"
+    filename_full = os.path.join(outdir, filename_full)
 
     filecsv = open(filename, "w")
+    heimcsv = open(filename_full, "w")
     filecsv.write("file,snr,stime,width,dm,label,chan_mask_path,num_files\n")
+    heimcsv.write("snr,stime,width,dm,members")
 # Loop through each .cand file
 
     for fname in cand_files:
@@ -24,13 +28,15 @@ def make_for_fetch(filfile, canddir, outdir, mask = " ", dms = [0,1000], snr = 6
                 # Split the line by spaces
                 v = line.split()
                 sn, toa, boxcar, dm, members = float(v[0]), float(v[2]), int(v[3]), float(v[5]), int(v[6])
-
+                stringf = f"{sn},{toa},{boxcar},{dm},{members}\n"
+                heimcsv.write(stringf)
                 if sn >= snr and dms[0] <= dm <= dms[1] and members <= Nmember:
                     string = f"{filfile},{snr},{toa},{boxcar},{dm},0,{mask},1\n"
                     #"%s,%.5f,%.5f,%0d,%.5f,0,%s,1\n"%(filfile, snr[lineidx], tcand[lineidx], filter[lineidx], dm[lineidx], mask
                     filecsv.write(string)
 
     filecsv.close()
+    heimcsv.close()
 
 
 

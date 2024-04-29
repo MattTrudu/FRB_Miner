@@ -64,6 +64,9 @@ def main(args):
         file.write(prepcmd+"\n")
         cand = os.path.join(outdir,"*.cand")
         file.write(f"rm -f {cand}"+"\n")
+        csvpath = os.path.join(outdir, "cand_forfetch.csv")
+        candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir}"
+        file.write(candmakercmd + "\n")
 
     file.close()
 
