@@ -39,9 +39,14 @@ def main(args):
     nsamps_gulp = config_data['nsamps_gulp']
     fswap = config_data['fswap']
 
+    #prepare_for_fetch
     snr = config_data['snr']
     dmf =  config_data['dmf']
     n_members =  config_data['n_members']
+
+    #fetch
+    probability = config_data['probability']
+    model = config_data['model']
 
     filename   = args.file
     outdir     = args.output_dir
@@ -67,6 +72,12 @@ def main(args):
         csvpath = os.path.join(outdir, "cand_forfetch.csv")
         candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir}"
         file.write(candmakercmd + "\n")
+        fetchcmd = f"predict.py -c {outdir} -m {model} -p {probability}"
+        file.write(fetchcmd+"\n")
+        results = os.path.join(outdir, f"results_{model}.csv" )
+        ploth5cmd = f"your_h5plotter.py -c {results} -o {outdir}"
+        file.write(ploth5cmd+"\n")
+        filw.write(f"rm -f {outdir}/*.h5 \n")
 
     file.close()
 
