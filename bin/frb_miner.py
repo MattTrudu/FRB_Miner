@@ -63,7 +63,7 @@ def main(args):
         prepcmd = f"prepare_for_fetch.py -f {filename} -m {maskpath} -o {outdir} -c {outdir} -d {dmf[0]} {dmf[1]} -s {snr} -n {n_members}"
         file.write(prepcmd+"\n")
         cand = os.path.join(outdir,"*.cand")
-        file.write(f"rm -f {cands}"+"\n")
+        file.write(f"rm -f {cand}"+"\n")
 
     file.close()
 
