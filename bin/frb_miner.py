@@ -53,8 +53,8 @@ def main(args):
         mkdir_p(outdir)
         rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -tstart {time_start} -ngulp {nsamps_gulp} -p {plot} -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
         file.write(rficmd+"\n")
-
-        heimdallcmd = f"launch_heimdall.py -f {filename} -o {outdir} -dm {dm} -m {os.path.join(outdir,mask_name)+".bad_chans"} -box_max {boxcar_max} -dm_tol {dm_tolerance} -ngulp = {nsamps_gulp} -fswap {fswap} -base_len {baseline_length} -rfi_no_narrow {rfi_no_narrow} -rfi_no_broad {rfi_no_broad} -no_scrunching {no_scrunching} -rfi_tol {rfi_tol} -scrunch_tol {scrunching_tol}"
+        maskpath = os.path.join(outdir,mask_name)+".bad_chans"
+        heimdallcmd = f"launch_heimdall.py -f {filename} -o {outdir} -dm {dm} -m {maskpath} -box_max {boxcar_max} -dm_tol {dm_tolerance} -ngulp = {nsamps_gulp} -fswap {fswap} -base_len {baseline_length} -rfi_no_narrow {rfi_no_narrow} -rfi_no_broad {rfi_no_broad} -no_scrunching {no_scrunching} -rfi_tol {rfi_tol} -scrunch_tol {scrunching_tol}"
         file.write(heimdallcmd+"\n")
     file.close()
 
