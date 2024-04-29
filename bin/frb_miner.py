@@ -62,7 +62,7 @@ def main(args):
         file.write(heimdallcmd+"\n")
         prepcmd = f"prepare_for_fetch.py -f {filename} -m {maskpath} -o {outdir} -c {outdir} -d {dmf[0]} {dmf[1]} -s {snr} -n {n_members}"
         file.write(prepcmd+"\n")
-        file.write(f"rm -f {os.path.join(outdir,".cand")}\n")
+        file.write(f"rm -f {os.path.join(outdir,".cand")}"+"\n")
 
     file.close()
 
