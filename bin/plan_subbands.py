@@ -5,7 +5,7 @@ import os
 import itertools
 import argparse
 
-def plan_subbands(filename, fthresh = 100, overlap=False, output_dir = os.getcwd(),output_name = "subbands.npy"):
+def plan_subbands(filename, fthresh = 100, overlap=False, save = True, output_dir = os.getcwd(),output_name = "subbands.npy"):
 
     filfile = your.Your(filename)
 
@@ -36,7 +36,7 @@ def plan_subbands(filename, fthresh = 100, overlap=False, output_dir = os.getcwd
             f0, f1 = f_delim[i], f_delim[i+s+1]
             if f1-f0 >= fthresh:
                 subbands.append((nchan - 1 - np.searchsorted(freqs[::-1], f1), nchan - 1 - np.searchsorted(freqs[::-1], f0)))
-                print(f0,f1)
+                #print(f0,f1)
                 #subbands.append((f0, f1))
                 #yield f0, f1
                 flag = True
@@ -46,8 +46,10 @@ def plan_subbands(filename, fthresh = 100, overlap=False, output_dir = os.getcwd
 
             #print("Subbands:")
             #print(subbands)
-
-            np.save(os.path.join(output_dir, output_name),subbands)
+            if save == True:
+                np.save(os.path.join(output_dir, output_name),subbands)
+            else:
+                return subbands
             #np.savetxt(os.path.join(output_dir, output_name.replace(".npy",".txt")),subbands)
 
 
@@ -98,6 +100,12 @@ def _get_parser():
         help = "Create also overlapped subbands",
         default = False,
     )
+    parser.add_argument(
+        "-s",
+        "--save",
+        help = "Save subbands",
+        default = False,
+    )
     return parser.parse_args()
 
 
@@ -110,4 +118,5 @@ if __name__ == '__main__':
                   fthresh = args.band_threshold,
                   overlap = args.overlap,
                   output_dir = args.output_dir,
+                  save = args.save,
                   output_name = args.name)

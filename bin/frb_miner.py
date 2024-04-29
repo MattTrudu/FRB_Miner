@@ -5,7 +5,14 @@ import argparse
 
 def main(args):
 
-    return 5
+    filename   = args.file
+    configfile = args.config
+    outdir     = args.output_dir
+    config_data = yaml.safe_load(configfile)
+
+    subband_search = config_data['subband_search']
+
+    print(subband_search)
 
 def _get_parser():
     """
@@ -31,7 +38,13 @@ def _get_parser():
         type = string,
         help = "YAML config file for the search",
     )
-
+    parser.add_argument(
+        "-o",
+        "--output_dir",
+        help = "Output directory",
+        type = str,
+        default = os.getcwd(),
+    )
     return parser.parse_args()
 
 

@@ -148,9 +148,9 @@ def _get_parser():
     parser.add_argument(
         "-dm_tol",
         "--dm_tolerance",
-        help = "SNR loss tolerance between DM trials (Default: 1.25) ",
+        help = "SNR loss tolerance between DM trials ",
         type = float,
-        default = None,
+        default = 1.25,
     )
 
     parser.add_argument(

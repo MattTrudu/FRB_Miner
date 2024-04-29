@@ -1,0 +1,39 @@
+#Basic config yaml file for the search
+
+#Sub-banded search
+subband_search: False
+channels: [[0,128],[128,256]]
+band_threshold: 100
+overlap: True 
+
+#RFI Exicision
+mask_name: "mask"
+time_start: 0
+nsamps_gulp: 8192
+sk_sigma: 5
+sg_sigma: 5
+sg_window: 43
+plot: True
+
+#Heimdall
+dm: [0,1000]
+dm_tolerance: 1.25
+boxcar_max: 10
+baseline_length: 2
+gpu_id: None
+rfi_no_narrow: None
+rfi_no_broad: None
+no_scrunching: None
+scrunching_tol: 1.15
+rfi_tol: 5
+nsamps_gulp: None
+fswap: False
+
+#Filtering with prepare_for_fetch.py
+snr: 6
+dm: [0,1000]
+n_members: 10
+
+#FETCH
+probability: 0.75
+model: a
