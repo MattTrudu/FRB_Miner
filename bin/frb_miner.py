@@ -82,22 +82,22 @@ def main(args):
         file.write(rficmd+"\n")
         maskpath = os.path.join(outdir,mask_name)+".bad_chans"
         heimdallcmd = f"launch_heimdall.py -f {filename} -o {outdir} -dm {dm[0]} {dm[1]} -m {maskpath} -box_max {boxcar_max} -dm_tol {dm_tolerance}"
-        if nsamps_gulp is not None:
-            heimdallcmd = heimdallcmd + f"-ngulp {nsamps_gulp}"
-        if fswap is not None:
-            heimdallcmd = heimdallcmd + f"-fswap {fswap}"
-        if baseline_length is not None:
-            heimdallcmd = heimdallcmd + f"-base_len {baseline_length}"
-        if rfi_no_narrow is not None:
-            heimdallcmd = heimdallcmd + f"-rfi_no_narrow {rfi_no_narrow}"
-        if rfi_no_broad is not None:
-            heimdallcmd = heimdallcmd + f"-rfi_no_broad {rfi_no_broad}"
-        if no_scrunching is not None:
-            heimdallcmd = heimdallcmd + f"-no_scrunching {no_scrunching}"
-        if rfi_tol is not None:
-            heimdallcmd = heimdallcmd + f"-rfi_tol {rfi_tol}"
-        if scrunching_tol is not None:
-            heimdallcmd = heimdallcmd + f"-scrunch_tol {scrunching_tol}"
+        if nsamps_gulp is not 'None':
+            heimdallcmd = heimdallcmd + f" -ngulp {nsamps_gulp}"
+        if fswap is not 'None':
+            heimdallcmd = heimdallcmd + f" -fswap {fswap}"
+        if baseline_length is not 'None':
+            heimdallcmd = heimdallcmd + f" -base_len {baseline_length}"
+        if rfi_no_narrow is not 'None':
+            heimdallcmd = heimdallcmd + f" -rfi_no_narrow {rfi_no_narrow}"
+        if rfi_no_broad is not 'None':
+            heimdallcmd = heimdallcmd + f" -rfi_no_broad {rfi_no_broad}"
+        if no_scrunching is not 'None':
+            heimdallcmd = heimdallcmd + f" -no_scrunching {no_scrunching}"
+        if rfi_tol is not 'None':
+            heimdallcmd = heimdallcmd + f" -rfi_tol {rfi_tol}"
+        if scrunching_tol is not 'None':
+            heimdallcmd = heimdallcmd + f" -scrunch_tol {scrunching_tol}"
         file.write(heimdallcmd+"\n")
         prepcmd = f"prepare_for_fetch.py -f {filename} -m {maskpath} -o {outdir} -c {outdir} -d {dmf[0]} {dmf[1]} -s {snr} -n {n_members}"
         file.write(prepcmd+"\n")
