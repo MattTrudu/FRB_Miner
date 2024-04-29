@@ -96,7 +96,7 @@ def main(args):
             heimdallcmd = heimdallcmd + f"-no_scrunching {no_scrunching}"
         if rfi_tol is not None:
             heimdallcmd = heimdallcmd + f"-rfi_tol {rfi_tol}"
-        if scrunch_tol is not None:
+        if scrunching_tol is not None:
             heimdallcmd = heimdallcmd + f"-scrunch_tol {scrunching_tol}"
         file.write(heimdallcmd+"\n")
         prepcmd = f"prepare_for_fetch.py -f {filename} -m {maskpath} -o {outdir} -c {outdir} -d {dmf[0]} {dmf[1]} -s {snr} -n {n_members}"
