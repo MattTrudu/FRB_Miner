@@ -59,7 +59,7 @@ def launch_heimdall(filename,
 
     if boxcar_max:
         bmax = boxcar_max * 10**(-3) #conversion in seconds
-        bmax = np.rint(bmax / tsamp).astype(np.int)
+        bmax = np.rint(bmax / tsamp).astype(np.int32)
         cmd = cmd + f" -boxcar_max {bmax}"
 
     if ngulp:
@@ -129,7 +129,12 @@ def _get_parser():
         formatter_class = argparse.ArgumentDefaultsHelpFormatter,
 
     )
-    parser.add_argument('-f', '--file', help="SIGPROC .fil file (required)", required = True)
+    parser.add_argument(
+        '-f',
+        '--file',
+        help = "SIGPROC .fil file (required)",
+        required = True,
+    )
 
     parser.add_argument(
         "-dm",
