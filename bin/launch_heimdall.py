@@ -97,7 +97,7 @@ def launch_heimdall(filename,
 
     if mask:
 
-        mask = np.loadtxt(mask, dtype=np.int)
+        mask = np.loadtxt(mask, dtype=np.int32)
 
         if len(mask.shape) == 1:
             badchans = mask
