@@ -60,8 +60,9 @@ def main(args):
         n_nodes = config_data['n_nodes']
         n_cpu = config_data['n_cpu']
         computing_time = config_data['computing_time']
+        jobname = pipename.replace(".sh","")
         file.write(f"#!/bin/bash\n")
-        file.write(f"#SBATCH --job-name = {pipename.replace(".sh","")}\n")
+        file.write(f"#SBATCH --job-name = {jobname}\n")
         file.write(f"#SBATCH --nodes={n_nodes}\n")
         file.write(f"#SBATCH --ntasks-per-node=1\n")
         file.write(f"#SBATCH --gres=gpu:1\n")
