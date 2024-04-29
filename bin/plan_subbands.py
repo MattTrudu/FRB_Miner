@@ -36,18 +36,19 @@ def plan_subbands(filename, fthresh = 100, overlap=False, output_dir = os.getcwd
             f0, f1 = f_delim[i], f_delim[i+s+1]
             if f1-f0 >= fthresh:
                 subbands.append((nchan - 1 - np.searchsorted(freqs[::-1], f1), nchan - 1 - np.searchsorted(freqs[::-1], f0)))
+                print(f0,f1)
                 #subbands.append((f0, f1))
                 #yield f0, f1
                 flag = True
 
         if not flag:
-            subbands = np.array(subbands)
+            return np.save(os.path.join(output_dir, output_name),np.array(subbands))
 
             #print("Subbands:")
             #print(subbands)
 
             np.save(os.path.join(output_dir, output_name),subbands)
-            np.savetxt(os.path.join(output_dir, output_name.replace(".npy",".txt")),subbands)
+            #np.savetxt(os.path.join(output_dir, output_name.replace(".npy",".txt")),subbands)
 
 
 def _get_parser():
