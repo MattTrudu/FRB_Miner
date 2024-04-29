@@ -27,15 +27,15 @@ plot: True
 dm: [0,1000]
 dm_tolerance: 1.25
 boxcar_max: 10
-baseline_length: 2
+baseline_length: None 
 gpu_id: None
 rfi_no_narrow: None
 rfi_no_broad: None
 no_scrunching: None
-scrunching_tol: 1.15
-rfi_tol: 5
+scrunching_tol: None
+rfi_tol: None
 nsamps_gulp: None
-fswap: False
+fswap: None
 
 #Filtering with prepare_for_fetch.py
 snr: 6
