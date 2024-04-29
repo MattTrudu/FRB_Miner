@@ -4,7 +4,7 @@
 subband_search: False
 channels: [[0,128],[128,256]]
 band_threshold: 100
-overlap: True 
+overlap: True
 
 #RFI Exicision
 mask_name: "mask"
@@ -31,7 +31,7 @@ fswap: False
 
 #Filtering with prepare_for_fetch.py
 snr: 6
-dm: [0,1000]
+dmf: [0,1000]
 n_members: 10
 
 #FETCH
