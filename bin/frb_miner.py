@@ -124,6 +124,7 @@ def _get_parser():
         type = str,
         help = "YAML config file for the search",
     )
+    parser.add_argument(    
         '-s',
         '--slurm',
         action = "store_false",
