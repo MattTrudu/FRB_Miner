@@ -28,14 +28,14 @@ def _get_parser():
     parser.add_argument(
         '-f',
         '--file',
-        type = string,
+        type = str,
         help = "SIGPROC .fil file (required)",
         required = True,
     )
     parser.add_argument(
         '-c',
         '--config',
-        type = string,
+        type = str,
         help = "YAML config file for the search",
     )
     parser.add_argument(
