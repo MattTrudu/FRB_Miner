@@ -124,10 +124,10 @@ def _get_parser():
         type = str,
         help = "YAML config file for the search",
     )
-    parser.add_argument(    
+    parser.add_argument(
         '-s',
         '--slurm',
-        action = "store_false",
+        action = "store_true",
         help = "Make a SLURM job rather than a bash script",
     )
     parser.add_argument(
