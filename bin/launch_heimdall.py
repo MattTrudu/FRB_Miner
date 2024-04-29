@@ -284,4 +284,4 @@ if __name__ == '__main__':
                         fswap = args.fswap)
 
 
-    os.sytem(cmd)
+    os.system(cmd)
