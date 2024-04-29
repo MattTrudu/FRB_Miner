@@ -28,9 +28,10 @@ def main(args):
 
 
     if subband_search == False:
-        #dirname =  os.path.splitext(os.path.basename(filename))[0]
+        dirname =  os.path.splitext(os.path.basename(filename))[0]
         #print(dirname)
-        #outdir = mkdir_p(os.path.join(outdir, dirname))
+        outdir = os.path.join(outdir, dirname)
+        mkdir_p(outdir)
         rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -tstart {time_start} -ngulp {nsamps_gulp} -p {plot} -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
         print(rficmd)
 
