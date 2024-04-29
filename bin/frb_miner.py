@@ -30,7 +30,7 @@ def main(args):
         dirname =  os.path.splitext(os.path.basename(filename))[0]
         print(dirname)
         outdir = mkdir_p(os.path.join(outdir, dirname))
-        rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -o {outdir} -tstart{time_start} -ngulp {nsamps_gulp} -p {plot} -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
+        rficmd = f"rfi_zapper.py -f {filename} -o {os.path.join(outdir,dirname)} -n {mask_name} -tstart {time_start} -ngulp {nsamps_gulp} -p {plot} -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
         print(rficmd)
 
 def _get_parser():
