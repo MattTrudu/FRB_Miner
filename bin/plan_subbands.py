@@ -45,7 +45,7 @@ def plan_subbands(filename, fthresh = 100, overlap=False, output_dir = os.getcwd
             print("Subbands:")
             print(subbands)
 
-            np.save(os.path.join(output_dir, output_name))
+            np.save(os.path.join(output_dir, output_name),subbands)
 
 
 def _get_parser():
@@ -70,7 +70,7 @@ def _get_parser():
         "--band_threshold",
         help = "Minimum bandwidth (in MHz) to be searched",
         type = float,
-        default = None,
+        default = 100,
     )
 
     parser.add_argument(
