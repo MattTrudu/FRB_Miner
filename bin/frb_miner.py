@@ -77,7 +77,7 @@ def main(args):
         results = os.path.join(outdir, f"results_{model}.csv" )
         ploth5cmd = f"your_h5plotter.py -c {results} -o {outdir}"
         file.write(ploth5cmd+"\n")
-        filw.write(f"rm -f {outdir}/*.h5 \n")
+        file.write(f"rm -f {outdir}/*.h5 \n")
 
     file.close()
 
