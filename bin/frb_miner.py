@@ -74,11 +74,13 @@ def main(args):
         file.write("module load pulsar/heimdallGPU\n")
         file.write("source /home/mtrudu/virtualenvs/frb/bin/activate\n")
 
+
     if subband_search == False:
         dirname =  os.path.splitext(os.path.basename(filename))[0]
         #print(dirname)
         outdir = os.path.join(outdir, dirname)
-        mkdir_p(outdir)
+        #mkdir_p(outdir)
+        file.write(f"mkdir {outdir}\n")
         if plot == True:
             rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -tstart {time_start} -ngulp {nsamps_gulpr} -p -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
         else:
