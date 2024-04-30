@@ -3,7 +3,7 @@
 #SLURM
 
 n_nodes: 1
-n_cpu: 4
+n_cpu: 16
 computing_time: 2:00:00
 
 
@@ -27,7 +27,7 @@ plot: True
 dm: [0,1000]
 dm_tolerance: 1.25
 boxcar_max: 10
-baseline_length: None 
+baseline_length: None
 gpu_id: None
 rfi_no_narrow: None
 rfi_no_broad: None

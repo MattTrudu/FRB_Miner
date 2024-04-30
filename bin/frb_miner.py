@@ -107,7 +107,10 @@ def main(args):
         cand = os.path.join(outdir,"*.cand")
         file.write(f"rm -f {cand}"+"\n")
         csvpath = os.path.join(outdir, "cand_forfetch.csv")
-        candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir}"
+        if slurm:
+            candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir} -n {n_cpu}"
+        else:
+            candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir}"    
         file.write(candmakercmd + "\n")
         fetchcmd = f"predict.py -c {outdir} -m {model} -p {probability}"
         file.write(fetchcmd+"\n")
