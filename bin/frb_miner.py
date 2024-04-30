@@ -72,6 +72,7 @@ def main(args):
         file.write("module purge\n")
         file.write("module load python/3.8.13\n")
         file.write("module load pulsar/heimdallGPU\n")
+        file.write("source /home/mtrudu/virtualenvs/frb/bin/activate\n")
 
     if subband_search == False:
         dirname =  os.path.splitext(os.path.basename(filename))[0]
@@ -110,12 +111,15 @@ def main(args):
         if slurm:
             candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir} -n {n_cpu}"
         else:
-            candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir}"    
+            candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir}"
         file.write(candmakercmd + "\n")
         fetchcmd = f"predict.py -c {outdir} -m {model} -p {probability}"
         file.write(fetchcmd+"\n")
         results = os.path.join(outdir, f"results_{model}.csv" )
-        ploth5cmd = f"your_h5plotter.py -c {results} -o {outdir}/"
+        if slurm:
+            ploth5cmd = f"your_h5plotter.py -f {outdit} -o {outdir}/ -n {n_cpu}"
+        else:
+            ploth5cmd = f"your_h5plotter.py -f {outdir} -o {outdir}/"
         file.write(ploth5cmd+"\n")
         file.write(f"rm -f {outdir}/*.h5 \n")
         file.write(f"rm -f {outdir}/*.log \n")
