@@ -31,7 +31,7 @@ def make_for_fetch(filfile, canddir, outdir, mask = " ", dms = [0,1000], snr = 6
                 stringf = f"{sn},{toa},{boxcar},{dm},{members}\n"
                 heimcsv.write(stringf)
                 if sn >= snr and dms[0] <= dm <= dms[1] and members >= Nmember:
-                    string = f"{filfile},{snr},{toa},{boxcar},{dm},0,{mask},1\n"
+                    string = f"{filfile},{sn},{toa},{boxcar},{dm},0,{mask},1\n"
                     #"%s,%.5f,%.5f,%0d,%.5f,0,%s,1\n"%(filfile, snr[lineidx], tcand[lineidx], filter[lineidx], dm[lineidx], mask
                     filecsv.write(string)
 
