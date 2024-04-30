@@ -92,11 +92,11 @@ def main(args):
         if baseline_length != 'None':
             heimdallcmd = heimdallcmd + f" -base_len {baseline_length}"
         if rfi_no_narrow != 'None':
-            heimdallcmd = heimdallcmd + f" -rfi_no_narrow {rfi_no_narrow}"
+            heimdallcmd = heimdallcmd + f" -rfi_no_narrow"
         if rfi_no_broad != 'None':
-            heimdallcmd = heimdallcmd + f" -rfi_no_broad {rfi_no_broad}"
+            heimdallcmd = heimdallcmd + f" -rfi_no_broad"
         if no_scrunching != 'None':
-            heimdallcmd = heimdallcmd + f" -no_scrunching {no_scrunching}"
+            heimdallcmd = heimdallcmd + f" -no_scrunching"
         if rfi_tol != 'None':
             heimdallcmd = heimdallcmd + f" -rfi_tol {rfi_tol}"
         if scrunching_tol != 'None':
@@ -115,6 +115,7 @@ def main(args):
         ploth5cmd = f"your_h5plotter.py -c {results} -o {outdir}/"
         file.write(ploth5cmd+"\n")
         file.write(f"rm -f {outdir}/*.h5 \n")
+        file.write(f"rm -f {outdir}/*.log \n")
 
     file.close()
 
