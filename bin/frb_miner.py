@@ -103,25 +103,25 @@ def main(args):
         if scrunching_tol != 'None':
             heimdallcmd = heimdallcmd + f" -scrunch_tol {scrunching_tol}"
         file.write(heimdallcmd+"\n")
-        prepcmd = f"prepare_for_fetch.py -f {filename} -m {maskpath} -o {outdir} -c {outdir} -d {dmf[0]} {dmf[1]} -s {snr} -n {n_members}"
+        prepcmd = f"prepare_for_fetch.py -f {filename} -o {outdir} -c {outdir} -d {dmf[0]} {dmf[1]} -s {snr} -n {n_members}"
         file.write(prepcmd+"\n")
         cand = os.path.join(outdir,"*.cand")
         file.write(f"rm -f {cand}"+"\n")
         csvpath = os.path.join(outdir, "cand_forfetch.csv")
         if slurm:
-            candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir} -n {n_cpu}"
+            candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir} -n {n_cpu} -ts 256 -r -sksig {sk_sigma} -sgsig {sg_sigma} -sgfw {sg_window}"
         else:
-            candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir}"
+            candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir} -ts 256 -r -sksig {sk_sigma} -sgsig {sg_sigma} -sgfw {sg_window}"
         file.write(candmakercmd + "\n")
         fetchcmd = f"predict.py -c {outdir} -m {model} -p {probability}"
         file.write(fetchcmd+"\n")
         results = os.path.join(outdir, f"results_{model}.csv" )
         if slurm:
-            ploth5cmd = f"your_h5plotter.py -f {outdit}/*.h5 -o {outdir}/ -n {n_cpu}"
+            ploth5cmd = f"your_h5plotter.py -f {outdit}/*.h5 -o {outdir}/ -n {n_cpu} -mad"
         else:
-            ploth5cmd = f"your_h5plotter.py -f {outdir}/*.h5 -o {outdir}/"
+            ploth5cmd = f"your_h5plotter.py -f {outdir}/*.h5 -o {outdir}/ -mad"
         file.write(ploth5cmd+"\n")
-        file.write(f"rm -f {outdir}/*.h5 \n")
+        #file.write(f"rm -f {outdir}/*.h5 \n")
         file.write(f"rm -f {outdir}/*.log \n")
 
     file.close()
