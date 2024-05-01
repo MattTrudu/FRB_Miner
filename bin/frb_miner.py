@@ -115,9 +115,10 @@ def main(args):
         else:
             candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir} -ts 256 -r -sksig {sk_sigma} -sgsig {sg_sigma} -sgfw {sg_window}"
         file.write(candmakercmd + "\n")
-        fetchcmd = f"predict.py -c {outdir} -m {model} -p {probability}"
-        file.write(fetchcmd+"\n")
-        results = os.path.join(outdir, f"results_{model}.csv" )
+        for mod in model:
+            fetchcmd = f"predict.py -c {outdir} -m {mod} -p {probability}"
+            file.write(fetchcmd+"\n")
+        #results = os.path.join(outdir, f"results_{model}.csv" )
         if slurm:
             ploth5cmd = f"your_h5plotter.py -f {outdir}/*.h5 -o {outdir}/ -n {n_cpu} -mad"
         else:

@@ -44,4 +44,4 @@ n_members: 10
 
 #FETCH
 probability: 0.75
-model: a
+model: [a,h]
