@@ -119,7 +119,7 @@ def main(args):
         file.write(fetchcmd+"\n")
         results = os.path.join(outdir, f"results_{model}.csv" )
         if slurm:
-            ploth5cmd = f"your_h5plotter.py -f {outdit}/*.h5 -o {outdir}/ -n {n_cpu} -mad"
+            ploth5cmd = f"your_h5plotter.py -f {outdir}/*.h5 -o {outdir}/ -n {n_cpu} -mad"
         else:
             ploth5cmd = f"your_h5plotter.py -f {outdir}/*.h5 -o {outdir}/ -mad"
         file.write(ploth5cmd+"\n")
