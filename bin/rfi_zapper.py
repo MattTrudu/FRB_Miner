@@ -308,7 +308,7 @@ def _get_parser():
     parser.add_argument(
         "-i",
         "--iqr_filter",
-        help = "Make a bandpass plot",
+        help = "Disable IQR filter",
         action = "store_true",
     )
 
@@ -330,5 +330,5 @@ if __name__ == '__main__':
              sg_sig = args.sg_sigma,
              sg_win = args.sg_window,
              verbosity = args.verbose,
-             iqr_filter = arg.iqr_filter,
+             iqr_filter = args.iqr_filter,
              plot = args.plot)
