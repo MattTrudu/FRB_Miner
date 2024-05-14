@@ -151,7 +151,8 @@ def flag_rfi(filename,
 
     mask = your.utils.rfi.sk_sg_filter(data, filfile, sk_sig, sg_win, sg_sig)
 
-    mask = rfi_mask(data.T,mask)
+    if iqr_filter:
+        mask = rfi_mask(data.T,mask)
 
     if verbosity:
         print(f"Done.")
@@ -304,6 +305,14 @@ def _get_parser():
         action = "store_true",
     )
 
+    parser.add_argument(
+        "-i",
+        "--iqr_filter",
+        help = "Make a bandpass plot",
+        action = "store_true",
+    )
+
+
     return parser.parse_args()
 
 
@@ -321,4 +330,5 @@ if __name__ == '__main__':
              sg_sig = args.sg_sigma,
              sg_win = args.sg_window,
              verbosity = args.verbose,
+             iqr_filter = arg.iqr_filter,
              plot = args.plot)

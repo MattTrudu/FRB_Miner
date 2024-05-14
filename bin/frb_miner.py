@@ -23,6 +23,7 @@ def main(args):
     sg_sigma = config_data['sg_sigma']
     sg_window = config_data['sg_window']
     plot = config_data['plot']
+    iqr_filter = config_data['iqr_filter']
 
     #Heimdall
 
@@ -85,6 +86,8 @@ def main(args):
             rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -tstart {time_start} -ngulp {nsamps_gulpr} -p -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
         else:
             rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -tstart {time_start} -ngulp {nsamps_gulpr} -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
+        if iqr_filter == True:
+            rficmd = rficmd + " -i"    
         file.write(rficmd+"\n")
         maskpath = os.path.join(outdir,mask_name)+".bad_chans"
         heimdallcmd = f"launch_heimdall.py -f {filename} -o {outdir} -dm {dm[0]} {dm[1]} -m {maskpath} -box_max {boxcar_max} -dm_tol {dm_tolerance}"
