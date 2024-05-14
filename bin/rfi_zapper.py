@@ -119,7 +119,8 @@ def flag_rfi(filename,
              sg_sig = 5,
              sg_win = 1,
              verbosity = None,
-             plot = None):
+             plot = None,
+             iqr_filter = None):
 
     filfile = your.Your(filename)
 
