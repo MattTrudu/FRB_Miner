@@ -83,7 +83,7 @@ def read_and_clean(filename,
     sk_window = int(clean_window / dt)
     for nsamps, ii, data in filterbank.read_plan(sk_window):
         #for out_file in enumerate(out_files):
-            data = data.reshape(nsamps, fil.header.nchans)
+            data = data.reshape(nsamps, filterbank.header.nchans)
             bad_chans = your.utils.rfi.sk_sg_filter(data, your.Your(filename), sk_sig, sg_win, sg_sig)
             bad_bins  = find_bad_bins(data.T, badchans_mask = bad_chans)
             mask = bad_bins[:, np.newaxis] | bad_chans
