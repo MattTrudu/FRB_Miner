@@ -3,7 +3,7 @@ import sys
 import os
 import argparse
 import numpy as np
-#import matplotlib as mpl
+import matplotlib as mpl
 #mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 import your

@@ -15,7 +15,7 @@ import your
 import warnings
 
 # Ignore all warnings
-warnings.filterwarnings("ignore")
+
 
 def find_bad_bins(array, badchans_mask = None):
 
@@ -84,6 +84,7 @@ def read_and_clean(filename,
     channels = np.arange(0, nchan)
 
     sk_window = int(clean_window / dt)
+    warnings.filterwarnings("ignore")
     for nsamps, ii, data in filterbank.read_plan(sk_window):
         #for out_file in enumerate(out_files):
             data = data.reshape(nsamps, filterbank.header.nchans)
