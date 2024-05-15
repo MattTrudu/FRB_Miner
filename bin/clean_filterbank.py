@@ -90,11 +90,11 @@ def read_and_clean(filename,
             data = data.reshape(nsamps, filterbank.header.nchans)
             bad_chans = your.utils.rfi.sk_sg_filter(data, your.Your(filename), sk_sig, sg_win, sg_sig)
             bad_bins  = find_bad_bins(data.T, badchans_mask = bad_chans)
-            mask = bad_bins[:, np.newaxis] & bad_chans
+            mask = bad_bins[:, np.newaxis] | bad_chans
             if mode == "whitenoise":
                 mu  = np.mean(data[~mask])
                 std = np.std(data[~mask])
-                data[mask] = np.random.randint(0,2**(nbits), size = mask.sum()) 
+                data[mask] = np.random.randint(0,2**(nbits), size = mask.sum())
             elif mode == "zero":
                 data[mask] = 0
             else:
