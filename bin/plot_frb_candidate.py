@@ -128,7 +128,7 @@ def prepare_data(data, badchans, freqs, tsamp, DM):
     dedispdata[badchans, :] = 0
 
 
-    return badchans, dedispdata
+    return badchans, dedispdata, data
 
 def downsample_mask(badchans, newshape):
 
@@ -226,7 +226,7 @@ def plot_candidate(filename,
     if verbose:
         print("Dedisperding...")
 
-    badchans, dedispdata = prepare_data(data, startmask, freqs, dt, dm)
+    badchans, dedispdata, data = prepare_data(data, startmask, freqs, dt, dm)
 
     if verbose:
         print(f"Taking {window_ms} ms around the candidate...")
@@ -318,7 +318,7 @@ def plot_candidate(filename,
     lc = np.mean(dedispdata, axis = 0)
     mask = np.ones(lc.shape[0], dtype = bool)
     amax = np.argmax(lc)
-    mask[amax - 8 * wing : amax + 8 * wing ] = 0
+    mask[amax - 16 * wing : amax + 16 * wing ] = 0
     mu  = np.mean(lc[~mask]) # mean off-burst
     std = np.std(lc[~mask])  # rms off-burst
     lc = (lc - mu) / std
