@@ -318,7 +318,7 @@ def plot_candidate(filename,
     lc = np.mean(dedispdata, axis = 0)
     mask = np.ones(lc.shape[0], dtype = bool)
     amax = np.argmax(lc)
-    mask[amax - wing : amax + wing ] = 0
+    mask[amax - 4 * wing : amax + 4 * wing ] = 0
     mu  = np.mean(lc[~mask]) # mean off-burst
     std = np.std(lc[~mask])  # rms off-burst
     lc = (lc - mu) / std
