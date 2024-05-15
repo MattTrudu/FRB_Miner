@@ -94,9 +94,11 @@ def read_and_clean(filename,
             if mode == "whitenoise":
                 mu  = np.mean(data[~mask])
                 std = np.std(data[~mask])
-                data[mask] = np.random.normal(mu,std)
-            if mode == "zero":
+                data[mask] = np.random.normal(5 * std,std) 
+            elif mode == "zero":
                 data[mask] = 0
+            else:
+                ValueError("Mode can be either whitenoise or zero")
             if int(nbits) == int(8):
                 data = data.astype("uint8")
             if int(nbits) == int(16):
