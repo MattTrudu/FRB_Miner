@@ -77,12 +77,13 @@ def plot_data(
 
     filfile = your.Your(filename)
 
-    tsamp     = filfile.your_header.native_tsamp
+    dt        = filfile.your_header.native_tsamp
     nsamp     = filfile.your_header.native_nspectra
     nchan     = filfile.your_header.native_nchans
     df        = filfile.your_header.foff
     ftop      = filfile.your_header.fch1
     tstartutc = filfile.your_header.tstart_utc
+
 
     fbot = ftop + nchan * df
 
