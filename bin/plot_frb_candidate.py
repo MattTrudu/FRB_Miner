@@ -214,6 +214,7 @@ def plot_candidate(filename,
         print("Grabbing data...")
 
     data = filfile.get_data(nstart = ncand - ndelay - wing, nsamp = 2 * (ndelay + wing) ).T
+    print(data.shape)
 
     if verbose:
         print("SK flagging...")
