@@ -131,18 +131,18 @@ def _get_parser():
                       "It performs an RFI excision in frequency via spectral kurtosis " + "\n"
                       "It performs an RFI excision in time via an IQR " + "\n"
                       "It works only with > 8-bits filterbanks...")
-    parser.add_argument('-f',
-                        '--file',
-                        action = "store" ,
-                        help = "SIGPROC .fil file to be processed (REQUIRED)",
-                        required = True)
-                        )
-    parser.add_argument('-o',
-                        '--output_dir',
-                        action = "store" ,
-                        help = "Output directory (Default: your current path)",
-                        default = "%s/"%(os.getcwd())
-                        )
+    parser.add_argument('-f', '--file', help="SIGPROC .fil file (required)", required = True)
+
+
+    parser.add_argument(
+        "-o",
+        "--output_dir",
+        help = "Output directory (Default: current directory)",
+        type = str,
+        default = os.getcwd(),
+    )
+
+
     parser.add_argument('-n',
                         '--output_name',
                         action = "store" ,
