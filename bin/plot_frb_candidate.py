@@ -288,13 +288,13 @@ def plot_candidate(filename,
 
     ax0_00 = plt.subplot(gs0[0,0])
     ax0_10 = plt.subplot(gs0[1,0])
-    ax0_11 = plt.subplot(gs0[1,1])
+    #ax0_11 = plt.subplot(gs0[1,1])
     ax0_20 = plt.subplot(gs0[2,0])
     ax1_20 = plt.subplot(gs1[2,0])
 
     size = 15
     ax0_00.set_xticks([])
-    ax0_00.set_yticks([])
+    #ax0_00.set_yticks([])
     ax0_10.set_xticks([])
     ax0_11.set_xticks([])
     ax0_11.set_yticks([])
@@ -340,6 +340,8 @@ def plot_candidate(filename,
     figure.text(0.650,0.800, f"Candidate arrival time (s) = {tcand_s}" ,fontsize = 10)
     figure.text(0.650,0.775, r"Candidate DM (pc$\times$cm$^{-3}$) = " + f"{dm}" ,fontsize = 10)
     figure.text(0.650,0.750, f"Candidate Box-car width (ms) = {(wing * dt * 1e3):.2f}" ,fontsize = 10)
+
+    plt.tight_layout()
 
     if save:
         output_name = f"{outname}.png"
