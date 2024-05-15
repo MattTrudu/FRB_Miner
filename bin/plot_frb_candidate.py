@@ -237,7 +237,7 @@ def plot_candidate(filename,
     window_s = window_ms * 1e-3
     window_bin =  int(window_s / dt)
 
-    dedispdata = dedispdata[:, ndelay - wing - window_bin : ndelay + wing + window_bin]
+    dedispdata = dedispdata[:, ndelay + wing - window_bin : ndelay + wing + window_bin]
 
     if grab_channels:
         if verbose:
@@ -323,7 +323,7 @@ def plot_candidate(filename,
     std = np.std(lc[mask])  # rms off-burst
     lc = (lc - mu) / std
 
-    ax0_00.step(np.arange(lc.shape[0]), lc, linewidth = 2, color = "magenta")
+    ax0_00.step(np.arange(lc.shape[0]), lc, linewidth = 1, color = "magenta")
     T = window_ms + wing * dt * 1e3
     ax0_10.imshow(dedispdata, aspect = "auto", cmap = "inferno", extent = (-T,T,freqs[-1],freqs[0]))
     ax0_20.imshow(dmt, aspect = "auto", extent = (-T,T, dm + 0.25 * dm, dm - 0.25 * dm))
@@ -432,7 +432,7 @@ def _get_parser():
         "--output_name",
         action="store",
         help="Output File Name (Default: candidate.png).",
-        default=None,
+        default="candidate",
     )
     parser.add_argument(
         "-s",
