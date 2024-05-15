@@ -169,11 +169,11 @@ def _get_parser():
                         type = int,
                         default = 15,
                         )
+    return parser.parse_args()
 
 if __name__ == '__main__':
 
     args = _get_parser()
-    print(args)
 
     read_and_clean(args.file,
                     output_dir = args.output_dir,
