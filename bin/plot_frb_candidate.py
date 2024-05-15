@@ -445,14 +445,14 @@ def _get_parser():
     parser.add_argument('-fs',
                         '--f_shape',
                         type = int,
-                        default = None,
+                        default = 256,
                         action = "store" ,
                         help = "Shape of the data in frequency"
                         )
     parser.add_argument('-ts',
                         '--t_shape',
                         type = int,
-                        default = None,
+                        default = 256,
                         action = "store" ,
                         help = "Shape of the data in time"
                         )
