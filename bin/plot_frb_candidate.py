@@ -337,7 +337,7 @@ def plot_candidate(filename,
     figure.text(0.650,0.700, f"File name: {name}" ,fontsize = 10)
 
 
-    figure.text(0.650,0.800, f"Candidate arrival time (s) = {tcand}" ,fontsize = 10)
+    figure.text(0.650,0.800, f"Candidate arrival time (s) = {tcand_s}" ,fontsize = 10)
     figure.text(0.650,0.775, r"Candidate DM (pc$\times$cm$^{-3}$) = " + f"{dm}" ,fontsize = 10)
     figure.text(0.650,0.750, f"Candidate Box-car width (ms) = {(wing * dt * 1e3):.2f}" ,fontsize = 10)
 
