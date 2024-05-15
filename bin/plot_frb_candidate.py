@@ -252,9 +252,9 @@ def plot_candidate(filename,
         print("Preparing DM-time plot...")
 
     if grab_channels:
-        dmt = DMT(dedispdata[cstart : cstop, :], freqs, dt)
+        dmt = DMT(dedispdata[cstart : cstop, :], freqs, dt, DM = dm)
     else:
-        dmt = DMT(dedispdata, freqs, dt)
+        dmt = DMT(dedispdata, freqs, dt, DM = dm)
 
     if verbose:
         print("Resizing...")
