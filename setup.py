@@ -7,7 +7,7 @@ setup(
     scripts=['bin/rfi_zapper.py', 'bin/launch_heimdall.py',
              'bin/subband_filterbank.py', 'bin/prepare_for_fetch.py',
              'bin/frb_miner.py','bin/plan_subbands.py', 'bin/plot_data.py',
-             'bin/clean_filterbank.py'],
+             'bin/clean_filterbank.py', 'bin/plot_frb_candidate.py'],
     author='Matteo Trudu',
     author_email='matteo.trudu@inaf.it',
     description='FRB searcher and analyser',
