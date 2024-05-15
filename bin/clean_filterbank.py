@@ -12,7 +12,10 @@ from scipy.ndimage import gaussian_filter
 from tqdm import tqdm
 import argparse
 import your
+import warnings
 
+# Ignore all warnings
+warnings.filterwarnings("ignore")
 
 def find_bad_bins(array, badchans_mask = None):
 
