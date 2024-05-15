@@ -99,7 +99,7 @@ def read_and_clean(filename,
                 data = data.astype("uint16")
             if int(nbits) == int(32):
                 data = data.astype("uint32")
-            out_file.cwrite(data.ravel())
+            outfile.cwrite(data.ravel())
 
 
     out_file.close()
