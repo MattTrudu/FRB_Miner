@@ -480,4 +480,4 @@ if __name__ == '__main__':
         tshape = args.t_shape,
         save = args.save_data,
         outname = args.output_name,
-        output_dir = arg.output_dir)
+        output_dir = args.output_dir)
