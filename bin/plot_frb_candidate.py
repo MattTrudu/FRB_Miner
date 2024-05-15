@@ -6,8 +6,10 @@ import your
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage.transform import resize
+from scipy.ndimage import gaussian_filter
 import getpass
 from datetime import datetime
+import warnings
 
 def dispersion_delay(fstart, fstop, dms = None):
 
@@ -185,6 +187,8 @@ def plot_candidate(filename,
     outname = "candidate",
     output_dir = os.getcwd()):
 
+    warnings.filterwarnings("ignore")
+
     filedir, name = os.path.split(filename)
 
     filfile = your.Your(filename)
@@ -214,7 +218,7 @@ def plot_candidate(filename,
         print("Grabbing data...")
 
     data = filfile.get_data(nstart = ncand - ndelay - wing, nsamp = 2 * (ndelay + wing) ).T
-    
+
     if verbose:
         print("SK flagging...")
     startmask = your.utils.rfi.sk_sg_filter(data[:,0:1024].T, filfile, sk_sig, sg_win, sg_sig)
