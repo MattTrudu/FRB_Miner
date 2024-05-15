@@ -202,7 +202,7 @@ def plot_candidate(filename,
     ddelay = dispersion_delay(fbot, ftop, dms = dm)
 
     ncand  = int(tcand_s / dt)
-    ndelay = int(ddleay / dt)
+    ndelay = int(ddelay / dt)
     if boxcar == 0:
         wing = 1
     else:
