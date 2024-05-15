@@ -188,7 +188,7 @@ if __name__ == '__main__':
 
     args = _get_parser()
 
-    read_and_clean(args.fil_file
+    read_and_clean(args.fil_file,
                     output_dir = args.output_dir,
                     output_name = args.output_name,
                     sk_sig = args.sk_sigma,
