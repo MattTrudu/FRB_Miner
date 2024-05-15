@@ -296,10 +296,10 @@ def plot_candidate(filename,
     ax0_00.set_xticks([])
     #ax0_00.set_yticks([])
     ax0_10.set_xticks([])
-    ax0_11.set_xticks([])
-    ax0_11.set_yticks([])
+    #ax0_11.set_xticks([])
+    #ax0_11.set_yticks([])
     ax0_00.margins(x=0)
-    ax0_11.margins(y=0)
+    #ax0_11.margins(y=0)
 
     ax0_00.set_ylabel(r"$\sigma$", size = size)
 
