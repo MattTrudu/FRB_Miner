@@ -325,7 +325,7 @@ def plot_candidate(filename,
 
     ax0_00.step(np.arange(lc.shape[0]), lc, linewidth = 2, color = "magenta")
     T = window_ms + wing * dt * 1e3
-    ax0_01.imshow(dedispdata, aspect = "auto", cmap = "inferno", extent = (-T,T,freqs[-1],freqs[0]))
+    ax0_10.imshow(dedispdata, aspect = "auto", cmap = "inferno", extent = (-T,T,freqs[-1],freqs[0]))
     ax0_20.imshow(dmt, aspect = "auto", extent = (-T,T, dm + 0.25 * dm, dm - 0.25 * dm))
 
     ax1_20.imshow(data, aspect = "auto", extent = (0, ddelay + wing * dt, freqs[-1], freqs[0]), cmap = "inferno")
