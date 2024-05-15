@@ -106,28 +106,13 @@ def read_and_clean(filename,
 
     return out_file.name
 
-"""
-    nchunks = nsamp // sk_window
-    for ii in tqdm(range(nchunks)):
-        data = filterbank.readBlock(ii * sk_window, sk_window)
-        bad_chans = your.utils.rfi.sk_sg_filter(data.T, your.Your(filename), sk_sig, sg_win, sg_sig)
-        bad_bins  = find_bad_bins(array, badchans_mask = bad_chans)
-        mask = bad_chans[:, np.newaxis] | bad_bins
-        if mode == "whitenoise":
-            mu  = np.mean(data[~mask])
-            std = np.std(data[~mask])
-            data[mask] = np.random.normal(mu,std)
-        if mode == "zero":
-            data[mask] = 0
-"""
-
 def _get_parser():
     """
     Argument parser.
     """
 
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        description = "Clean a SIGPROC filterbank file from RFI and produces a cleaned filterbank" + "\n"
+    description = "Clean a SIGPROC filterbank file from RFI and produces a cleaned filterbank" + "\n"
                       "It performs an RFI excision in frequency via spectral kurtosis " + "\n"
                       "It performs an RFI excision in time via an IQR " + "\n"
                       "It works only with > 8-bits filterbanks...")
@@ -188,6 +173,7 @@ def _get_parser():
 if __name__ == '__main__':
 
     args = _get_parser()
+    print(args)
 
     read_and_clean(args.file,
                     output_dir = args.output_dir,
