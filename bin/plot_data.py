@@ -102,12 +102,12 @@ def plot_data(
 
         nstart = int(time_start / dt)
         nstop = int(time_stop / dt)
-        ngulp = nstop - nstart 
-        data = filfile.get_data(nstart = nstart, nsamp = ngulp)
+        ngulp = nstop - nstart
+        data = filfile.get_data(nstart = nstart, nsamp = ngulp).T
         time = time[nstart:nstop]
         #data = data[:, nstart : nstop]
     else:
-        data = filfile.get_data(nstart = 0, nsamp = nsamp)
+        data = filfile.get_data(nstart = 0, nsamp = nsamp).T
 
 
     if grab_channels:
