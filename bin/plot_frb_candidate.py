@@ -197,6 +197,8 @@ def plot_candidate(filename,
     tstartutc = filfile.your_header.tstart_utc
     fbot = ftop + nchan * df
 
+
+
     freqs  = np.linspace(ftop, fbot, nchan)
 
     ddelay = dispersion_delay(fbot, ftop, dms = dm)
@@ -211,7 +213,7 @@ def plot_candidate(filename,
     if verbose:
         print("Grabbing data...")
 
-    data = filfile.get_data(nstart = ncand - ndelay - wing, nsamp = 2 * (ncand + wing) ).T
+    data = filfile.get_data(nstart = ncand - ndelay - wing, nsamp = 2 * (ndelay + wing) ).T
 
     if verbose:
         print("SK flagging...")
