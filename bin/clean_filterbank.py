@@ -132,10 +132,11 @@ def _get_parser():
                       "It performs an RFI excision in time via an IQR " + "\n"
                       "It works only with > 8-bits filterbanks...")
     parser.add_argument('-f',
-                        '--fil_file',
+                        '--file',
                         action = "store" ,
                         help = "SIGPROC .fil file to be processed (REQUIRED)",
                         required = True)
+                        )
     parser.add_argument('-o',
                         '--output_dir',
                         action = "store" ,
@@ -188,7 +189,7 @@ if __name__ == '__main__':
 
     args = _get_parser()
 
-    read_and_clean(args.fil_file,
+    read_and_clean(args.file,
                     output_dir = args.output_dir,
                     output_name = args.output_name,
                     sk_sig = args.sk_sigma,
