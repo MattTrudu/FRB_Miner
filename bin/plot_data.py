@@ -78,7 +78,7 @@ def plot_data(
     filfile = your.Your(filename)
 
     dt        = filfile.your_header.native_tsamp
-    nsamp     = filfile.your_header.native_nspectra
+    nsamp     = int(filfile.your_header.native_nspectra)
     nchan     = filfile.your_header.native_nchans
     df        = filfile.your_header.foff
     ftop      = filfile.your_header.fch1
@@ -102,6 +102,7 @@ def plot_data(
 
         nstart = int(time_start / dt)
         nstop = int(time_stop / dt)
+        ngulp = nstop - nstart 
         data = filfile.get_data(nstart = nstart, nsamp = ngulp)
         time = time[nstart:nstop]
         #data = data[:, nstart : nstop]
