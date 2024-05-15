@@ -94,7 +94,7 @@ def read_and_clean(filename,
             if mode == "whitenoise":
                 mu  = np.mean(data[~mask])
                 std = np.std(data[~mask])
-                data[mask] = np.random.normal(5 * std,std) 
+                data[mask] = np.random.randint(0,2**(nbits), size = mask.sum()) 
             elif mode == "zero":
                 data[mask] = 0
             else:
