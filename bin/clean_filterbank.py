@@ -94,7 +94,10 @@ def read_and_clean(filename,
             if mode == "whitenoise":
                 #mu  = np.mean(data[~mask])
                 #std = np.std(data[~mask])
-                data[:,bad_chans] = np.random.randint(0,2**(nbits), size = bad_chans.sum())
+                spec = np.mean(data[:,~bad_chans], axis = 1)
+                mu = np.mean(spec)
+                sig = np.std(spec)
+                data[:,bad_chans] = np.random.uniform(spec.min(),spec.max(), size = bad_chans.sum())
             elif mode == "zero":
                 data[:,bad_chans] = 0
             else:
@@ -145,7 +148,7 @@ def _get_parser():
                         type = str,
                         action = "store" ,
                         help = "Mode to substitute the data (whitenoise or zero)",
-                        default = "whitenoise"
+                        default = "zero"
                         )
     parser.add_argument('-cl_win',
                         '--clean_window',

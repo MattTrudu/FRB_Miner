@@ -289,7 +289,7 @@ def _get_parser():
         "--sg_window",
         help = "Savitzky-Golay window (in MHz)",
         type = int,
-        default = 15,
+        default = 41,
     )
 
     parser.add_argument(
