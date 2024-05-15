@@ -319,8 +319,8 @@ def plot_candidate(filename,
     mask = np.ones(lc.shape[0], dtype = bool)
     amax = np.argmax(lc)
     mask[amax - wing : amax + wing ] = 0
-    mu  = np.mean(lc[mask]) # mean off-burst
-    std = np.std(lc[mask])  # rms off-burst
+    mu  = np.mean(lc[~mask]) # mean off-burst
+    std = np.std(lc[~mask])  # rms off-burst
     lc = (lc - mu) / std
 
     ax0_00.step(np.arange(lc.shape[0]), lc, linewidth = 1, color = "magenta")
@@ -340,8 +340,8 @@ def plot_candidate(filename,
     figure.text(0.650,0.800, f"Candidate arrival time (s) = {tcand_s}" ,fontsize = 10)
     figure.text(0.650,0.775, r"Candidate DM (pc$\times$cm$^{-3}$) = " + f"{dm}" ,fontsize = 10)
     figure.text(0.650,0.750, f"Candidate Box-car width (ms) = {(wing * dt * 1e3):.2f}" ,fontsize = 10)
-
     plt.tight_layout()
+
 
     if save:
         output_name = f"{outname}.png"
