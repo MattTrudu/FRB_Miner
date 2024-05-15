@@ -81,7 +81,7 @@ def read_and_clean(filename,
     channels = np.arange(0, nchan)
 
     sk_window = int(clean_window / dt)
-    for nsamps, ii, data in fil.read_plan(sk_window):
+    for nsamps, ii, data in filterbank.read_plan(sk_window):
         #for out_file in enumerate(out_files):
             data = data.reshape(nsamps, fil.header.nchans)
             bad_chans = your.utils.rfi.sk_sg_filter(data, your.Your(filename), sk_sig, sg_win, sg_sig)
