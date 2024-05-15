@@ -105,9 +105,9 @@ def read_and_clean(filename,
             outfile.cwrite(data.ravel())
 
 
-    out_file.close()
+    outfile.close()
 
-    return out_file.name
+    return outfile.name
 
 def _get_parser():
     """
