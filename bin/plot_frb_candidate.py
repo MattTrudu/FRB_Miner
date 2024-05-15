@@ -214,11 +214,9 @@ def plot_candidate(filename,
         print("Grabbing data...")
 
     data = filfile.get_data(nstart = ncand - ndelay - wing, nsamp = 2 * (ndelay + wing) ).T
-
-
+    
     if verbose:
         print("SK flagging...")
-    range = np.min(1024, data.shape[1])
     startmask = your.utils.rfi.sk_sg_filter(data[:,0:1024].T, filfile, sk_sig, sg_win, sg_sig)
 
     if verbose:
