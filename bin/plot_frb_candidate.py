@@ -464,9 +464,9 @@ if __name__ == '__main__':
 
     gchan = args.grab_channels is not None
     chanstart, chanstop = args.grab_channels or (None, None)
-    plot_candidate(arg.file,
+    plot_candidate(args.file,
         args.time_cand,
-        boxcar = 0,
+        boxcar = args.box_car,
         dm = args.dm_cand,
         window_ms = args.time_window,
         sk_sig = args.sk_sigma,
