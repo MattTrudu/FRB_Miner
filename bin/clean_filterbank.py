@@ -93,16 +93,7 @@ def read_and_clean(filename,
             #bad_bins  = find_bad_bins(data.T, badchans_mask = bad_chans)
             #mask = bad_bins[:, np.newaxis] | bad_chans
             if mode == "whitenoise":
-                #mu  = np.mean(data[~mask])
-                #std = np.std(data[~mask])
-                spec = np.mean(data[:,~bad_chans], axis = 1)
-                mu = np.mean(spec)
-                sig = np.std(spec)
-                data[:,bad_chans] = np.random.uniform(spec.min(),spec.max(), size = bad_chans.sum())
-                if ii == 0:
-                    plt.figure()
-                    plt.imshow(data.T, aspect = "auto")
-                    plt.savefig("test.png")
+                data[:,bad_chans] = np.random.uniform(data[:,~bad_chans].min(),data[:,~bad_chans].max(), size = bad_chans.sum())
             elif mode == "zero":
                 data[:,bad_chans] = 0
             else:
