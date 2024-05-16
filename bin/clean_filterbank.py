@@ -159,7 +159,7 @@ def read_and_clean(filename,
                 bad_chans = your.utils.rfi.sk_sg_filter(data, your.Your(filename), sk_sig, sg_win, sg_sig)
                 if mode == "whitenoise":
                     data[:,bad_chans] = np.random.normal(data[:,~bad_chans].mean(),data[:,~bad_chans].std(), size = bad_chans.sum())
-                    data = rescale_array_with_mean(data, 2**(nbits // 2)-1, target_min = 0, target_max = 2**(nbits)-1)
+                    data = rescale_array_with_mean(data, 2**(nbits -1)-1, target_min = 0, target_max = 2**(nbits)-1)
                 elif mode == "zero":
                     data[:,bad_chans] = 0
                 else:
@@ -167,7 +167,7 @@ def read_and_clean(filename,
             if klt_clean:
                 eigenspectrum,eigenvectors,kltdata = klt(data, klt_thr)
                 residual = data - kltdata
-                data = rescale_array_with_mean(residual, 2**(nbits // 2)-1, target_min = 0, target_max = 2**(nbits)-1)
+                data = rescale_array_with_mean(residual, 2**(nbits -1)-1, target_min = 0, target_max = 2**(nbits)-1)
             else:
                 ValueError("Cleaning strategy not picked...")
 
