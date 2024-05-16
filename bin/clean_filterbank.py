@@ -166,7 +166,7 @@ def read_and_clean(filename,
                     ValueError("Mode can be either whitenoise or zero")
             if klt_clean:
                 eigenspectrum,eigenvectors,kltdata = klt(data, klt_thr)
-                residual = data - kltdata.T
+                residual = data - kltdata
                 data = rescale_array_with_mean(residual, np.mean(data), target_min = 0, target_max = 2**(nbits)-1)
             else:
                 ValueError("Cleaning strategy not picked...")
