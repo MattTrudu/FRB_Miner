@@ -53,34 +53,32 @@ def find_bad_bins(array, badchans_mask = None):
 
     return badbins
 
-def rescale_array_with_mean(array, target_mean, target_min=0, target_max=255):
+def scale_array_to_range(array, nbits = 8):
     """
-    Rescale an array to a new range while preserving the distribution and adjusting the mean.
+    Scale a processed 2D array to the range of 0 to 2^nbits-1.
 
     Parameters:
-    - array: Input array to be rescaled.
-    - target_mean: Desired mean of the rescaled array.
-    - target_min: New minimum value of the range (default: 0).
-    - target_max: New maximum value of the range (default: 255).
+    - array: NumPy array, the processed 2D array to be scaled.
+    - nbits: int, the number of bits of the data.
 
     Returns:
-    - rescaled_array: Rescaled array with values between target_min and target_max and adjusted mean.
+    - scaled_array: NumPy array, the scaled array within the specified range.
     """
-    # Find the minimum and maximum values in the array
-    min_value = np.min(array)
-    max_value = np.max(array)
+    # Compute the maximum value that can be represented with nbits
+    max_value = 2**nbits - 1
 
-    # Scale the array linearly to the new range [target_min, target_max]
-    scaled_array = (array - min_value) * (target_max - target_min) / (max_value - min_value) + target_min
+    # Scale the data to the range [-1, 1]
+    min_val = np.min(array)
+    max_val = np.max(array)
+    scaled_array = (2 * (array - min_val) / (max_val - min_val)) - 1
 
-    # Adjust the mean of the scaled array
-    scaled_mean = np.mean(scaled_array)
-    rescaled_array = scaled_array + (target_mean - scaled_mean)
+    # Map the range [-1, 1] to [0, max_value]
+    scaled_array = ((scaled_array + 1) / 2) * max_value
 
-    # Clip the values to ensure they are within the specified range
-    rescaled_array = np.clip(rescaled_array, target_min, target_max)
+    # Convert the scaled array to integer type with nbits
+    scaled_array = scaled_array.astype(np.uint8)  # Adjust data type as needed
 
-    return rescaled_array
+    return scaled_array
 
 def eigenbasis(matrix):
 
@@ -126,6 +124,7 @@ def read_and_clean(filename,
                    sg_win = 1,
                    klt_clean = False,
                    klt_thr = 0.4,
+                   z_thr = 1,
                    clean_window = 0.1,
                    mode = "whitenose",
                    ):
@@ -159,15 +158,25 @@ def read_and_clean(filename,
                 bad_chans = your.utils.rfi.sk_sg_filter(data, your.Your(filename), sk_sig, sg_win, sg_sig)
                 if mode == "whitenoise":
                     data[:,bad_chans] = np.random.normal(data[:,~bad_chans].mean(),data[:,~bad_chans].std(), size = bad_chans.sum())
-                    data = rescale_array_with_mean(data, 2**(nbits -1)-1, target_min = 0, target_max = 2**(nbits)-1)
+                    data = scale_array_to_range(data, nbits = nbits)
                 elif mode == "zero":
                     data[:,bad_chans] = 0
                 else:
                     ValueError("Mode can be either whitenoise or zero")
             if klt_clean:
                 eigenspectrum,eigenvectors,kltdata = klt(data, klt_thr)
-                residual = data - kltdata
-                data = rescale_array_with_mean(residual, 2**(nbits -1)-1, target_min = 0, target_max = 2**(nbits)-1)
+                z_scores = (kltdata.T - np.mean(kltdata.T)) / np.std(kltdata.T)
+                outliers_mask = np.abs(z_scores) > z_thr
+                if mode == "whitenoise":
+                    mu  = data[~outliers_mask].mean()
+                    std = data[~outliers_mask].std()
+                    data[outliers_mask] = np.random.normal(mu, std, size = outliers_mask.sum())
+                    data = scale_array_to_range(data, nbits = nbits)
+                elif mode == "zero":
+                    data[outliers_mask] = 0
+                else:
+                    ValueError("Mode can be either whitenoise or zero")
+
             else:
                 ValueError("Cleaning strategy not picked...")
 
@@ -216,7 +225,7 @@ def _get_parser():
                         '--mode',
                         type = str,
                         action = "store" ,
-                        help = "Mode to substitute the data in the SK flagging (whitenoise or zero)",
+                        help = "Mode to substitute the data in the flagging (whitenoise or zero)",
                         default = "zero"
                         )
     parser.add_argument('-cl_win',
@@ -266,7 +275,13 @@ def _get_parser():
                         action = "store" ,
                         help = "Percentage, from 0 (doing nothing) to 1 (removing all the data) of the total variance of signal to evaluate the number of eigen images for the KLT RFI template"
                         )
-
+    parser.add_argument('-z_th',
+                        '--z_threshold',
+                        type = float,
+                        default = 1,
+                        action = "store" ,
+                        help = "Z-score threshold to get the bad pixels from the KLT RFI template"
+                        )
     return parser.parse_args()
 
 if __name__ == '__main__':
@@ -283,4 +298,5 @@ if __name__ == '__main__':
                     clean_window = args.clean_window,
                     mode = args.mode,
                     klt_clean = args.klt_clean,
-                    klt_thr = args.klt_threshold)
+                    klt_thr = args.klt_threshold,
+                    z_thr = args.z_threshold)
