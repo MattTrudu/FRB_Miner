@@ -53,13 +53,79 @@ def find_bad_bins(array, badchans_mask = None):
 
     return badbins
 
+def rescale_array_with_mean(array, target_mean, target_min=0, target_max=255):
+    """
+    Rescale an array to a new range while preserving the distribution and adjusting the mean.
+
+    Parameters:
+    - array: Input array to be rescaled.
+    - target_mean: Desired mean of the rescaled array.
+    - target_min: New minimum value of the range (default: 0).
+    - target_max: New maximum value of the range (default: 255).
+
+    Returns:
+    - rescaled_array: Rescaled array with values between target_min and target_max and adjusted mean.
+    """
+    # Find the minimum and maximum values in the array
+    min_value = np.min(array)
+    max_value = np.max(array)
+
+    # Scale the array linearly to the new range [target_min, target_max]
+    scaled_array = (array - min_value) * (target_max - target_min) / (max_value - min_value) + target_min
+
+    # Adjust the mean of the scaled array
+    scaled_mean = np.mean(scaled_array)
+    rescaled_array = scaled_array + (target_mean - scaled_mean)
+
+    # Clip the values to ensure they are within the specified range
+    rescaled_array = np.clip(rescaled_array, target_min, target_max)
+
+    return rescaled_array
+
+def eigenbasis(matrix):
+
+    """
+    Compute the eigenvalues and the eigenvectors of a square matrix and return the eigenspectrum (eigenvalues sorted in decreasing order) and the sorted eigenvectors respect
+    to the eigenspectrum for the KLT analysis
+    """
+
+    eigenvalues,eigenvectors = np.linalg.eigh(matrix)
+
+    if eigenvalues[0] < eigenvalues[-1]:
+        eigenvalues = np.flipud(eigenvalues)
+        eigenvectors = np.fliplr(eigenvectors)
+    eigenspectrum = eigenvalues
+    return eigenspectrum,eigenvectors
+
+def count_elements_for_threshold(arr, threshold):
+    sorted_arr = np.sort(arr)[::-1]  # Sort array in descending order
+    total_sum = np.sum(sorted_arr)
+    cumulative_sum = np.cumsum(sorted_arr)
+    num_elements = np.searchsorted(cumulative_sum, threshold * total_sum, side='right') + 1
+    return num_elements
+
+def klt(signals, threshold):
+
+    R = np.cov((signals-np.mean(signals,axis=0)),rowvar=False)
+
+    eigenspectrum,eigenvectors = eigenbasis(R)
+
+    neig = count_elements_for_threshold(eigenspectrum, threshold)
+
+    coeff = np.matmul((signals[:,:]-np.mean(signals,axis=0)),np.conjugate((eigenvectors[:,:])))
+    recsignals = np.matmul(coeff[:,0:int(neig)],np.transpose(eigenvectors[:,0:int(neig)])) + np.mean(signals,axis=0)
+
+    return eigenspectrum,eigenvectors,recsignals
 
 def read_and_clean(filename,
                    output_dir = os.getcwd(),
                    output_name = None,
+                   sk_clean = False,
                    sk_sig = 5,
                    sg_sig = 5,
                    sg_win = 1,
+                   klt_clean = False,
+                   klt_thr = 0.4,
                    clean_window = 0.1,
                    mode = "whitenose",
                    ):
@@ -89,15 +155,22 @@ def read_and_clean(filename,
     for nsamps, ii, data in filterbank.read_plan(sk_window):
         #for out_file in enumerate(out_files):
             data = data.reshape(nsamps, filterbank.header.nchans)
-            bad_chans = your.utils.rfi.sk_sg_filter(data, your.Your(filename), sk_sig, sg_win, sg_sig)
-            #bad_bins  = find_bad_bins(data.T, badchans_mask = bad_chans)
-            #mask = bad_bins[:, np.newaxis] | bad_chans
-            if mode == "whitenoise":
-                data[:,bad_chans] = np.random.uniform(data[:,~bad_chans].min(),data[:,~bad_chans].max(), size = bad_chans.sum())
-            elif mode == "zero":
-                data[:,bad_chans] = 0
+            if sk_clean:
+                bad_chans = your.utils.rfi.sk_sg_filter(data, your.Your(filename), sk_sig, sg_win, sg_sig)
+                if mode == "whitenoise":
+                    data[:,bad_chans] = np.random.normal(data[:,~bad_chans].mean(),data[:,~bad_chans].std(), size = bad_chans.sum())
+                    data = rescale_array_with_mean(data, data[:,~bad_chans].mean(), target_min = 0, target_max = 2**(nbits)-1)
+                elif mode == "zero":
+                    data[:,bad_chans] = 0
+                else:
+                    ValueError("Mode can be either whitenoise or zero")
+            if klt_clean:
+                eigenspectrum,eigenvectors,kltdata = klt(data, klt_thr)
+                residual = data - kltdata.T
+                data = rescale_array_with_mean(residual, np.mean(data), target_min = 0, target_max = 2**(nbits)-1)
             else:
-                ValueError("Mode can be either whitenoise or zero")
+                ValueError("Cleaning strategy not picked...")
+
             if int(nbits) == int(8):
                 data = data.astype("uint8")
             if int(nbits) == int(16):
@@ -143,7 +216,7 @@ def _get_parser():
                         '--mode',
                         type = str,
                         action = "store" ,
-                        help = "Mode to substitute the data (whitenoise or zero)",
+                        help = "Mode to substitute the data in the SK flagging (whitenoise or zero)",
                         default = "zero"
                         )
     parser.add_argument('-cl_win',
@@ -174,6 +247,26 @@ def _get_parser():
                         type = int,
                         default = 15,
                         )
+    parser.add_argument(
+                        "-sk",
+                        "--sk_clean",
+                        help = "Find the bad channels with a instantaneous spectral kurtosis",
+                        action = "store_true",
+                        )
+    parser.add_argument(
+                        "-klt",
+                        "--klt_clean",
+                        help = "Create an RFI template via the KLT and subtract it from the data",
+                        action = "store_true",
+                        )
+    parser.add_argument('-klt_th',
+                        '--klt_threshold',
+                        type = float,
+                        default = 0.4,
+                        action = "store" ,
+                        help = "Percentage, from 0 (doing nothing) to 1 (removing all the data) of the total variance of signal to evaluate the number of eigen images for the KLT RFI template"
+                        )
+
     return parser.parse_args()
 
 if __name__ == '__main__':
@@ -183,9 +276,11 @@ if __name__ == '__main__':
     read_and_clean(args.file,
                     output_dir = args.output_dir,
                     output_name = args.output_name,
+                    sk_clean = args.sk_clean,
                     sk_sig = args.sk_sigma,
                     sg_sig = args.sg_sigma,
                     sg_win = args.sg_window,
                     clean_window = args.clean_window,
                     mode = args.mode,
-                    )
+                    klt_clean = args.klt_clean,
+                    klt_thr = args.klt_threshold)
