@@ -127,7 +127,7 @@ def plot_data(
     timeseries = np.mean(data, axis=0)
     spectrum = np.mean(data, axis=1)
 
-    np.save("datatest.npy",data)
+    #np.save("datatest.npy",data)
 
     fig = plt.figure(figsize=(15, 10))
     mpl.rcParams["axes.linewidth"] = 1.0
