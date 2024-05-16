@@ -99,7 +99,7 @@ def read_and_clean(filename,
                 mu = np.mean(spec)
                 sig = np.std(spec)
                 data[:,bad_chans] = np.random.uniform(spec.min(),spec.max(), size = bad_chans.sum())
-                if ii = 0:
+                if ii == 0:
                     plt.figure()
                     plt.imshow(data.T, aspect = "auto")
                     plt.savefig("test.png")
