@@ -99,9 +99,10 @@ def read_and_clean(filename,
                 mu = np.mean(spec)
                 sig = np.std(spec)
                 data[:,bad_chans] = np.random.uniform(spec.min(),spec.max(), size = bad_chans.sum())
-                plt.figure()
-                plt.imshow(data.T, aspect = "auto")
-                plt.savefig("test.png")
+                if ii = 0:
+                    plt.figure()
+                    plt.imshow(data.T, aspect = "auto")
+                    plt.savefig("test.png")
             elif mode == "zero":
                 data[:,bad_chans] = 0
             else:
