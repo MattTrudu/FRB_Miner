@@ -85,12 +85,12 @@ def main(args):
         file.write(f"mkdir {outdir}\n")
         rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -tstart {time_start} -ngulp {nsamps_gulpr} -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
         if plot == True:
-            rficmd = rficmd + "-p"
+            rficmd = rficmd + " -p"
         if iqr_filter == True:
             rficmd = rficmd + " -i"
         if zap_chans:
             for clo,chi in zap_chans:
-                rficmd = rficmd + f" -z {clo} {chi}"    
+                rficmd = rficmd + f" -z {clo} {chi}"
         file.write(rficmd+"\n")
         maskpath = os.path.join(outdir,mask_name)+".bad_chans"
         heimdallcmd = f"launch_heimdall.py -f {filename} -o {outdir} -dm {dm[0]} {dm[1]} -m {maskpath} -box_max {boxcar_max} -dm_tol {dm_tolerance}"
