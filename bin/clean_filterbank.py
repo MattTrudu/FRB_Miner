@@ -13,8 +13,9 @@ from tqdm import tqdm
 import argparse
 import your
 import warnings
+import matplotlib
 import matplotlib.pyplot as plt
-
+cmap = matplotlib.colors.ListedColormap(['white', 'black'])
 # Ignore all warnings
 
 
@@ -64,6 +65,8 @@ def scale_array_to_range(array, nbits = 8):
     Returns:
     - scaled_array: NumPy array, the scaled array within the specified range.
     """
+    # Renormalise data
+
     # Compute the maximum value that can be represented with nbits
     max_value = 2**nbits - 1
 
@@ -76,8 +79,6 @@ def scale_array_to_range(array, nbits = 8):
     scaled_array = ((scaled_array + 1) / 2) * max_value
 
     # Convert the scaled array to integer type with nbits
-    scaled_array = scaled_array.astype(np.uint8)  # Adjust data type as needed
-
     return scaled_array
 
 def eigenbasis(matrix):
@@ -126,7 +127,7 @@ def read_and_clean(filename,
                    klt_thr = 0.4,
                    z_thr = 1,
                    clean_window = 0.1,
-                   mode = "whitenose",
+                   mode = "whitenoise",
                    ):
 
 
@@ -172,9 +173,9 @@ def read_and_clean(filename,
                     std = data[~outliers_mask].std()
                     data[outliers_mask] = np.random.normal(mu, std, size = outliers_mask.sum())
                     data = scale_array_to_range(data, nbits = nbits)
-                    if ii in [0,1,2]:
+                    if ii in [0,1,2,3,4]:
                        plt.figure()
-                       plt.imshow(data.T, aspect = "auto")
+                       plt.imshow(outliers_mask.T, aspect = "auto", cmap = cmap)
                        plt.savefig(f"test_{ii}.png")
                 elif mode == "zero":
                     data[outliers_mask] = 0
