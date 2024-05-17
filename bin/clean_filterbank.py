@@ -166,7 +166,7 @@ def read_and_clean(filename,
                     ValueError("Mode can be either whitenoise or zero")
             if klt_clean:
                 eigenspectrum,eigenvectors,kltdata = klt(data, klt_thr)
-                z_scores = (kltdata - np.mean(kltdata.T)) / np.std(kltdata.T)
+                z_scores = (kltdata.T - np.mean(kltdata.T)) / np.std(kltdata.T)
                 outliers_mask = np.abs(z_scores) > z_thr
                 if mode == "whitenoise":
                     mu  = data[~outliers_mask.T].mean()
