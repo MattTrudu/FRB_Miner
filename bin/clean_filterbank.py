@@ -153,47 +153,44 @@ def read_and_clean(filename,
     sk_window = int(clean_window / dt)
     warnings.filterwarnings("ignore")
     for nsamps, ii, data in filterbank.read_plan(sk_window):
-        #for out_file in enumerate(out_files):
-            data = data.reshape(nsamps, filterbank.header.nchans)
-            if ii in [0,1,2,3,4]:
-               plt.figure()
-               print(data.T.mean(),data.T.std())
-               plt.hist(data.ravel(), bins = 100)
-               #plt.imshow(outliers_mask.T, aspect = "auto", cmap = cmap)
-               plt.savefig(f"hist_{ii}.png")
-            if sk_clean:
-                bad_chans = your.utils.rfi.sk_sg_filter(data, your.Your(filename), sk_sig, sg_win, sg_sig)
-                if mode == "whitenoise":
-                    data[:,bad_chans] = np.random.normal(data[:,~bad_chans].mean(),data[:,~bad_chans].std(), size = bad_chans.sum())
-                    data = scale_array_to_range(data, nbits = nbits)
-                elif mode == "zero":
-                    data[:,bad_chans] = 0
-                else:
-                    ValueError("Mode can be either whitenoise or zero")
-            if klt_clean:
-                eigenspectrum,eigenvectors,kltdata = klt(data, klt_thr)
-                z_scores = (kltdata - np.mean(kltdata)) / np.std(kltdata)
-                outliers_mask = np.abs(z_scores) > z_thr
-                if mode == "whitenoise":
-                    mu  = data[~outliers_mask].mean()
-                    std = data[~outliers_mask].std()
-                    data[outliers_mask] = np.random.normal(mu, std, size = outliers_mask.sum())
-                    data = scale_array_to_range(data, nbits = nbits)
-                elif mode == "zero":
-                    data[outliers_mask] = 0
-                else:
-                    ValueError("Mode can be either whitenoise or zero")
-
+        data = data.reshape(nsamps, filterbank.header.nchans)
+        if ii in [0,1,2,3,4]:
+            print(data.mean(),data.std())
+        if sk_clean:
+            bad_chans = your.utils.rfi.sk_sg_filter(data, your.Your(filename), sk_sig, sg_win, sg_sig)
+            if mode == "whitenoise":
+                data[:,bad_chans] = np.random.normal(data[:,~bad_chans].mean(),data[:,~bad_chans].std(), size = bad_chans.sum())
+                data = scale_array_to_range(data, nbits = nbits)
+            elif mode == "zero":
+                data[:,bad_chans] = 0
             else:
-                ValueError("Cleaning strategy not picked...")
+                ValueError("Mode can be either whitenoise or zero")
+        if klt_clean:
+            eigenspectrum,eigenvectors,kltdata = klt(data, klt_thr)
+            if ii in [0,1,2,3,4]:
+                print(kltdata.mean(),kltdata.std())
+            z_scores = (kltdata - np.mean(kltdata)) / np.std(kltdata)
+            outliers_mask = np.abs(z_scores) > z_thr
+            if mode == "whitenoise":
+                mu  = data[~outliers_mask].mean()
+                std = data[~outliers_mask].std()
+                data[outliers_mask] = np.random.normal(mu, std, size = outliers_mask.sum())
+                data = scale_array_to_range(data, nbits = nbits)
+            elif mode == "zero":
+                data[outliers_mask] = 0
+            else:
+                ValueError("Mode can be either whitenoise or zero")
 
-            if int(nbits) == int(8):
-                data = data.astype("uint8")
-            if int(nbits) == int(16):
-                data = data.astype("uint16")
-            if int(nbits) == int(32):
-                data = data.astype("uint32")
-            outfile.cwrite(data.ravel())
+        else:
+            ValueError("Cleaning strategy not picked...")
+
+        if int(nbits) == int(8):
+            data = data.astype("uint8")
+        if int(nbits) == int(16):
+            data = data.astype("uint16")
+        if int(nbits) == int(32):
+            data = data.astype("uint32")
+        outfile.cwrite(data.ravel())
 
 
     outfile.close()
