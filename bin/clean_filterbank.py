@@ -168,6 +168,7 @@ def read_and_clean(filename,
                 eigenspectrum,eigenvectors,kltdata = klt(data, klt_thr)
                 z_scores = (kltdata - np.mean(kltdata)) / np.std(kltdata)
                 outliers_mask = np.abs(z_scores) > z_thr
+                print(kltdata.dtype,data.dtype)
                 if mode == "whitenoise":
                     mu  = data[~outliers_mask].mean()
                     std = data[~outliers_mask].std()
