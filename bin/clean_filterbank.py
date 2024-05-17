@@ -171,6 +171,7 @@ def read_and_clean(filename,
                 mu  = data[~outliers_mask].mean()
                 std = data[~outliers_mask].std()
                 data[outliers_mask] = np.random.normal(mu, std, size = outliers_mask.sum())
+                data = (data - data.mean()) / data.std()
                 data = scale_array_to_range(data, nbits = nbits)
             elif mode == "zero":
                 data[outliers_mask] = 0
