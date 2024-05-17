@@ -154,8 +154,6 @@ def read_and_clean(filename,
     warnings.filterwarnings("ignore")
     for nsamps, ii, data in filterbank.read_plan(sk_window):
         data = data.reshape(nsamps, filterbank.header.nchans)
-        if ii in [0,1,2,3,4]:
-            print(data.mean(),data.std())
         if sk_clean:
             bad_chans = your.utils.rfi.sk_sg_filter(data, your.Your(filename), sk_sig, sg_win, sg_sig)
             if mode == "whitenoise":
@@ -167,8 +165,6 @@ def read_and_clean(filename,
                 ValueError("Mode can be either whitenoise or zero")
         if klt_clean:
             eigenspectrum,eigenvectors,kltdata = klt(data, klt_thr)
-            if ii in [0,1,2,3,4]:
-                print(kltdata.mean(),kltdata.std())
             z_scores = (kltdata - np.mean(kltdata)) / np.std(kltdata)
             outliers_mask = np.abs(z_scores) > z_thr
             if mode == "whitenoise":
