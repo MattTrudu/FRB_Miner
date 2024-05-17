@@ -166,17 +166,16 @@ def read_and_clean(filename,
                     ValueError("Mode can be either whitenoise or zero")
             if klt_clean:
                 eigenspectrum,eigenvectors,kltdata = klt(data, klt_thr)
-                z_scores = (kltdata - np.mean(kltdata)) / np.std(kltdata)
+                z_scores = (kltdata - np.mean(kltdata.T)) / np.std(kltdata.T)
                 outliers_mask = np.abs(z_scores) > z_thr
-                print(kltdata.dtype,data.dtype)
                 if mode == "whitenoise":
-                    mu  = data[~outliers_mask].mean()
-                    std = data[~outliers_mask].std()
-                    data[outliers_mask] = np.random.normal(mu, std, size = outliers_mask.sum())
+                    mu  = data[~outliers_mask.T].mean()
+                    std = data[~outliers_mask.T].std()
+                    data[outliers_mask.T] = np.random.normal(mu, std, size = outliers_mask.sum())
                     data = scale_array_to_range(data, nbits = nbits)
                     if ii in [0,1,2,3,4]:
                        plt.figure()
-                       plt.imshow(outliers_mask.T, aspect = "auto", cmap = cmap)
+                       plt.imshow(outliers_mask, aspect = "auto", cmap = cmap)
                        plt.savefig(f"test_{ii}.png")
                 elif mode == "zero":
                     data[outliers_mask] = 0
