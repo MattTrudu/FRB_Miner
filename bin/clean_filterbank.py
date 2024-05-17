@@ -157,6 +157,7 @@ def read_and_clean(filename,
             data = data.reshape(nsamps, filterbank.header.nchans)
             if ii in [0,1,2,3,4]:
                plt.figure()
+               print(data.mean(),data.std())
                plt.hist(data.ravel(), bins = 100)
                #plt.imshow(outliers_mask.T, aspect = "auto", cmap = cmap)
                plt.savefig(f"hist_{ii}.png")
