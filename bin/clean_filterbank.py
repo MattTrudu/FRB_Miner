@@ -155,6 +155,11 @@ def read_and_clean(filename,
     for nsamps, ii, data in filterbank.read_plan(sk_window):
         #for out_file in enumerate(out_files):
             data = data.reshape(nsamps, filterbank.header.nchans)
+            if ii in [0,1,2,3,4]:
+               plt.figure()
+               plt.hist(data.ravel(), bins = 100)
+               #plt.imshow(outliers_mask.T, aspect = "auto", cmap = cmap)
+               plt.savefig(f"hist_{ii}.png")
             if sk_clean:
                 bad_chans = your.utils.rfi.sk_sg_filter(data, your.Your(filename), sk_sig, sg_win, sg_sig)
                 if mode == "whitenoise":
@@ -166,17 +171,13 @@ def read_and_clean(filename,
                     ValueError("Mode can be either whitenoise or zero")
             if klt_clean:
                 eigenspectrum,eigenvectors,kltdata = klt(data, klt_thr)
-                z_scores = (kltdata.T - np.mean(kltdata.T)) / np.std(kltdata.T)
+                z_scores = (kltdata - np.mean(kltdata)) / np.std(kltdata)
                 outliers_mask = np.abs(z_scores) > z_thr
                 if mode == "whitenoise":
-                    mu  = data[~outliers_mask.T].mean()
-                    std = data[~outliers_mask.T].std()
-                    data[outliers_mask.T] = np.random.normal(mu, std, size = outliers_mask.sum())
+                    mu  = data[~outliers_mask].mean()
+                    std = data[~outliers_mask].std()
+                    data[outliers_mask] = np.random.normal(mu, std, size = outliers_mask.sum())
                     data = scale_array_to_range(data, nbits = nbits)
-                    if ii in [0,1,2,3,4]:
-                       plt.figure()
-                       plt.imshow(outliers_mask, aspect = "auto", cmap = cmap)
-                       plt.savefig(f"test_{ii}.png")
                 elif mode == "zero":
                     data[outliers_mask] = 0
                 else:
@@ -283,7 +284,7 @@ def _get_parser():
     parser.add_argument('-z_th',
                         '--z_threshold',
                         type = float,
-                        default = 1,
+                        default = 1.0,
                         action = "store" ,
                         help = "Z-score threshold to get the bad pixels from the KLT RFI template"
                         )
