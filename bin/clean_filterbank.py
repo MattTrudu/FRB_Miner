@@ -172,6 +172,10 @@ def read_and_clean(filename,
                     std = data[~outliers_mask].std()
                     data[outliers_mask] = np.random.normal(mu, std, size = outliers_mask.sum())
                     data = scale_array_to_range(data, nbits = nbits)
+                    if ii == [0,1,2]
+                       plt.figure()
+                       plt.imshow(data.T, aspect = "auto")
+                       plt.savefig(f"test_{ii}.png")
                 elif mode == "zero":
                     data[outliers_mask] = 0
                 else:
