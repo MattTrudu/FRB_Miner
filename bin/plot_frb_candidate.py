@@ -62,6 +62,42 @@ def renormalize_data(array, badchans_mask = None):
 
     return renorm_data
 
+def renormalize_data_no_rfi(array):
+
+    """
+    It takes a spectro-temporal data array and and renormalize the data with respect to a smoothed baseline and make some flagging with an IQR code.
+    """
+
+
+    renorm_data = np.copy(array)
+    spec = renorm_data.mean(1)
+
+
+    for i, newd in enumerate(renorm_data):
+        renorm_data[i, :] = (newd - spec[i]) / spec[i]
+
+    baseline = np.mean(renorm_data, axis=0)
+    badbins = np.zeros(baseline.size, dtype=bool)
+
+    if baseline.size > 1000:
+        smooth_baseline = gaussian_filter(baseline, 101, truncate = 1)
+        detr = baseline - smooth_baseline
+
+        ordered = np.sort(detr)
+        q1 = ordered[baseline.size // 4]
+        q2 = ordered[baseline.size // 2]
+        q3 = ordered[baseline.size // 4 * 3]
+        lowlim = q2 - 2 * (q2 - q1)
+        hilim = q2 + 2 * (q3 - q2)
+
+        badbins = (detr < lowlim) | (detr > hilim)
+        baseline = smooth_baseline
+
+    renorm_data -= baseline
+
+
+    return renorm_data
+
 def iqr_filter(data, badchans_mask = None):
 
     """
@@ -130,6 +166,16 @@ def prepare_data(data, badchans, freqs, tsamp, DM):
 
     return badchans, dedispdata, data
 
+def prepare_data_no_rfi(data, freqs, tsamp, DM):
+
+    data = np.asarray(data , dtype = np.float32)
+
+    data = renormalize_data_no_rfi(data)
+
+    dedispdata = dedisperse(data, DM, freqs, tsamp, ref_freq="bottom")
+
+    return dedispdata, data
+
 def downsample_mask(badchans, newshape):
 
     """
@@ -185,7 +231,8 @@ def plot_candidate(filename,
     tshape = 256,
     save = False,
     outname = "candidate",
-    output_dir = os.getcwd()):
+    output_dir = os.getcwd(),
+    no_rfi = False):
 
     warnings.filterwarnings("ignore")
 
@@ -219,20 +266,26 @@ def plot_candidate(filename,
 
     data = filfile.get_data(nstart = ncand - ndelay - wing, nsamp = 2 * (ndelay + wing) ).T
 
-    if verbose:
-        print("SK flagging...")
-    startmask = your.utils.rfi.sk_sg_filter(data[:,0:1024].T, filfile, sk_sig, sg_win, sg_sig)
+    if no_rfi:
+        if verbose:
+            print("Dedisperding...")
 
-    if verbose:
-        print("Dedisperding...")
+        dedispdata, data = prepare_data_no_rfi(data, freqs, dt, dm)
+    else:
+        if verbose:
+            print("SK flagging...")
+        startmask = your.utils.rfi.sk_sg_filter(data[:,0:1024].T, filfile, sk_sig, sg_win, sg_sig)
 
-    badchans, dedispdata, data = prepare_data(data, startmask, freqs, dt, dm)
+        if verbose:
+            print("Dedisperding...")
+
+        badchans, dedispdata, data = prepare_data(data, startmask, freqs, dt, dm)
 
     if verbose:
         print(f"Taking {window_ms} ms around the candidate...")
 
     data = data[:, ndelay - wing : -1]
-    data[badchans,:] = 0
+
 
     window_s = window_ms * 1e-3
     window_bin =  int(window_s / dt)
@@ -423,6 +476,12 @@ def _get_parser():
         help = "Be verbose",
     )
     parser.add_argument(
+        '-nr',
+        '--no_rfi',
+        action = "store_true",
+        help = "Do not do RFI excision",
+    )
+    parser.add_argument(
         "-o",
         "--output_dir",
         action="store",
@@ -490,4 +549,5 @@ if __name__ == '__main__':
         tshape = args.t_shape,
         save = args.save_data,
         outname = args.output_name,
-        output_dir = args.output_dir)
+        output_dir = args.output_dir,
+        no_rfi = args.no_rfi)
