@@ -22,7 +22,7 @@ def dispersion_delay(fstart, fstop, dms = None):
         / 1000
     )
 
-def dedisperse(wfall, DM, freq, dt, ref_freq="top"):
+def dedisperse(wfall, DM, freq, dt, ref_freq="bottom"):
     """
     Dedisperse a wfall matrix to DM.
     """
@@ -72,7 +72,8 @@ def plot_data(
     channel_stop=None,
     save_flag=True,
     file_format=".png",
-    renorm_flag = False):
+    renorm_flag = False,
+    dedisp = None):
 
     filedir, name = os.path.split(filename)
 
@@ -110,6 +111,8 @@ def plot_data(
     else:
         data = filfile.get_data(nstart = 0, nsamp = nsamp).T
 
+    if dedisp:
+        data = dedisperse(data, dedisp, freqs, dt, ref_freq="bottom")
 
     if grab_channels:
         cstart = int(channel_start)
@@ -121,13 +124,14 @@ def plot_data(
         data = data[cstart:cstop,:]
         channels = channels[cstart:cstop]
 
+
     if renorm_flag:
         data = renormalize_data(data)
 
     timeseries = np.mean(data, axis=0)
     spectrum = np.mean(data, axis=1)
 
-    
+
 
     fig = plt.figure(figsize=(15, 10))
     mpl.rcParams["axes.linewidth"] = 1.0
@@ -219,6 +223,13 @@ def _get_parser():
         default=None,
     )
     parser.add_argument(
+        "-d",
+        "--dedisperse",
+        help="Dedisperse data at a given DM.",
+        type=float,
+        default=None,
+    )
+    parser.add_argument(
         "-c",
         "--grab_channels",
         help="Grab a portion of the data in frequency channels. Usage -c cstart cstop (Default = False).",
@@ -258,6 +269,7 @@ if __name__ == "__main__":
     channel_start, channel_stop = args.grab_channels or (None, None)
     fileformat = args.file_format
     renorm_flag = args.renorm
+    dedisperd = args.dedisperse
 
     plot_data(
         filename,
@@ -271,4 +283,5 @@ if __name__ == "__main__":
         channel_stop=channel_stop,
         save_flag=save_flag,
         file_format=fileformat,
-        renorm_flag = renorm_flag)
+        renorm_flag = renorm_flag,
+        dedisp = args.dedisperse)

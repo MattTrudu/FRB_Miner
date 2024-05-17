@@ -123,7 +123,7 @@ def iqr_filter(data, badchans_mask = None):
 
     return badchans
 
-def dedisperse(wfall, DM, freq, dt, ref_freq="top"):
+def dedisperse(wfall, DM, freq, dt, ref_freq="bottom"):
     """
     Dedisperse a wfall matrix to DM.
     """
@@ -274,7 +274,8 @@ def plot_candidate(filename,
     else:
         if verbose:
             print("SK flagging...")
-        startmask = your.utils.rfi.sk_sg_filter(data[:,0:1024].T, filfile, sk_sig, sg_win, sg_sig)
+            L = np.min(8192, data.shape[1])
+        startmask = your.utils.rfi.sk_sg_filter(data[:,0:L].T, filfile, sk_sig, sg_win, sg_sig)
 
         if verbose:
             print("Dedisperding...")
