@@ -120,7 +120,8 @@ def flag_rfi(filename,
              sg_win = 1,
              verbosity = None,
              plot = None,
-             iqr_filter = None):
+             iqr_filter = None,
+             zap_chans = None):
 
     filfile = your.Your(filename)
 
@@ -154,6 +155,10 @@ def flag_rfi(filename,
 
     if iqr_filter:
         mask = rfi_mask(data.T,mask)
+
+    if zap_chans:
+        for clo, chi in zap_chans:
+            mask[clo : chi] = 1
 
     if verbosity:
         print(f"Done.")
@@ -309,9 +314,17 @@ def _get_parser():
     parser.add_argument(
         "-i",
         "--iqr_filter",
-        help = "Disable IQR filter",
+        help = "Enable IQR filter",
         action = "store_true",
     )
+
+    parser.add_argument("-z",
+                        "--zap_chans",
+                        nargs=2,
+                        type=int,
+                        action='append',
+                        metavar=('int1', 'int2'),
+                        help="Manually zap channels between a certain range. Iterable.")
 
 
     return parser.parse_args()
@@ -332,4 +345,5 @@ if __name__ == '__main__':
              sg_win = args.sg_window,
              verbosity = args.verbose,
              iqr_filter = args.iqr_filter,
-             plot = args.plot)
+             plot = args.plot,
+             zap_chans = args.zap_chans)
