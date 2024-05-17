@@ -274,8 +274,8 @@ def plot_candidate(filename,
     else:
         if verbose:
             print("SK flagging...")
-        L = np.min(8192, data.shape[1])
-        startmask = your.utils.rfi.sk_sg_filter(data[:,0:L].T, filfile, sk_sig, sg_win, sg_sig)
+        #L = np.min(8192, data.shape[1])
+        startmask = your.utils.rfi.sk_sg_filter(data[:,0:1024].T, filfile, sk_sig, sg_win, sg_sig)
 
         if verbose:
             print("Dedisperding...")
