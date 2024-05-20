@@ -348,14 +348,14 @@ def plot_candidate(filename,
 
     size = 15
     ax0_00.set_xticks([])
-    #ax0_00.set_yticks([])
+    ax0_00.set_yticks([])
     ax0_10.set_xticks([])
     #ax0_11.set_xticks([])
     #ax0_11.set_yticks([])
     ax0_00.margins(x=0)
     #ax0_11.margins(y=0)
 
-    ax0_00.set_ylabel(r"$\sigma$", size = size)
+    #ax0_00.set_ylabel(r"$\sigma$", size = size)
 
     ax0_10.set_ylabel("Frequency (MHz)", size = size)
     ax0_20.set_ylabel(r"DM (pc$\times$cm$^{-3}$)", size = size)
@@ -364,10 +364,10 @@ def plot_candidate(filename,
     ax1_20.set_ylabel("Frequency (MHz)", size = size)
     ax1_20.set_xlabel("Time (s)", size = size)
 
-    #ax0_00.spines['top'].set_color('k')
-    #ax0_00.spines['right'].set_color('k')
-    #ax0_00.spines['left'].set_color('k')
-    #ax0_00.spines['bottom'].set_color('k')
+    ax0_00.spines['top'].set_color('k')
+    ax0_00.spines['right'].set_color('k')
+    ax0_00.spines['left'].set_color('k')
+    ax0_00.spines['bottom'].set_color('k')
 
     lc = np.mean(dedispdata, axis = 0)
     mask = np.ones(lc.shape[0], dtype = bool)
