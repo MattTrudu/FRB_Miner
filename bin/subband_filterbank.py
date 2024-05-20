@@ -27,7 +27,7 @@ def grab_subband(filename, outdir, outname, chanstart = 0, chanpersub = 1):
     out_file = fil.header.prep_outfile(name,
                                              {"nchans":chanpersub,
                                               "fch1": fstart },
-                                              back_compatible=back_compatible, nbits=fil.header.nbits)
+                                              nbits=fil.header.nbits)
 
 
     for nsamps, ii, data in fil.read_plan(gulp):
