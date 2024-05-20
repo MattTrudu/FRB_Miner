@@ -36,7 +36,7 @@ def grab_subband(filename, outdir, outname, chanstart = 0, chanpersub = 1):
 
     out_file.close()
 
-    return out_file.name#[out_file.name for out_file in out_files]
+    #return out_file.name#[out_file.name for out_file in out_files]
 
 
 
