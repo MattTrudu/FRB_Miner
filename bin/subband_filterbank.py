@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import os
 import sys
-#from sigpyproc.base import Filterbank
-from sigpyproc.readers import FilReader
+from sigpyproc.Filterbank import Filterbank
+from sigpyproc.Readers import FilReader
 import time
 import numpy as np
 import argparse
@@ -24,7 +24,7 @@ def grab_subband(filename, outdir, outname, chanstart = 0, chanpersub = 1):
     fstart = fil.header.fch1 + chanstart*fil.header.foff
     #print(fstart)
     name = os.path.join(outdir, outname)
-    out_file = fil.header.prep_outfile(name,updates= {"nchans":chanpersub, "fch1": fstart}, nbits = fil.header.nbits, rescale = True)
+    out_file = fil.header.prepOutfile(name,updates= {"nchans":chanpersub, "fch1": fstart}, nbits = fil.header.nbits, back_compatible = True)
 
 
     for nsamps, ii, data in fil.read_plan(gulp):
@@ -38,7 +38,7 @@ def grab_subband(filename, outdir, outname, chanstart = 0, chanpersub = 1):
 
 
 
-    #return out_file.name#[out_file.name for out_file in out_files]
+    return out_file.name#[out_file.name for out_file in out_files]
 
 
 
