@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import os
 import sys
-from sigpyproc.base import Filterbank
-from sigpyproc.readers import FilReader
+from sigpyproc.Filterbank import Filterbank
+from sigpyproc.Readers import FilReader
 import time
 import numpy as np
 from scipy.signal import correlate
@@ -147,12 +147,12 @@ def read_and_clean(filename,
     dt    = filterbank.header.tsamp
 
 
-    outfile = filterbank.header.prep_outfile(os.path.join(output_dir,output_name), back_compatible = True, nbits = nbits)
+    outfile = filterbank.header.prepOutfile(os.path.join(output_dir,output_name), back_compatible = True, nbits = nbits)
     channels = np.arange(0, nchan)
 
     sk_window = int(clean_window / dt)
     warnings.filterwarnings("ignore")
-    for nsamps, ii, data in filterbank.read_plan(sk_window):
+    for nsamps, ii, data in filterbank.readPlan(sk_window):
         data = data.reshape(nsamps, filterbank.header.nchans)
         if sk_clean:
             bad_chans = your.utils.rfi.sk_sg_filter(data, your.Your(filename), sk_sig, sg_win, sg_sig)
