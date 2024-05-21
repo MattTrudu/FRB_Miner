@@ -72,9 +72,11 @@ def main(args):
         file.write(f"#SBATCH --time={computing_time}\n")
 
         file.write("module purge\n")
-        file.write("module load python/3.8.13\n")
-        file.write("module load pulsar/heimdallGPU\n")
-        file.write("source /home/mtrudu/virtualenvs/frb/bin/activate\n")
+        file.write("module load openmpi/4.1.5a1  \n")
+        file.write("module load pulsar/fftw3.3.8 \n")
+        file.write("module load pulsar/heimdallGPU \n")
+        file.write("module load python/3.8.13 \n")
+        file.write("source /home/mtrudu/virtualenvs/frb/bin/activate \n")
 
 
     if subband_search == False:
