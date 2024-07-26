@@ -15,7 +15,7 @@ def make_for_fetch(filfile, canddir, outdir, mask = " ", dms = [0,1000], snr = 6
 
     filecsv = open(filename, "w")
     heimcsv = open(filename_full, "w")
-    filecsv.write("file,snr,stime,width,dm,label,chan_mask_path,num_files\n")
+    filecsv.write("file,snr,stime,width,dm,label,chan_mask_path,num_files \n")
     heimcsv.write("snr,stime,width,dm,members\n")
 # Loop through each .cand file
 

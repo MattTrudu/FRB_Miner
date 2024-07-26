@@ -289,7 +289,7 @@ def plot_candidate(filename,
 
 
     window_s = window_ms * 1e-3
-    window_bin =  int(window_s / dt)
+    window_bin =  int(0.5 * window_s / dt)
 
     dedispdata = dedispdata[:, ndelay + wing - window_bin : ndelay + wing + window_bin]
 
