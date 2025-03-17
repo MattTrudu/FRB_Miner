@@ -4,7 +4,7 @@ import sys
 import numpy as np
 import yaml
 import argparse
-from utils import grab_subband
+
 
 def main(args):
     configfile = args.config
@@ -91,7 +91,7 @@ def main(args):
             rficmd = rficmd + " -p"
         if iqr_filter == True:
             rficmd = rficmd + " -i"
-        if zap_chans:
+        if zap_chans is not None:
             for clo,chi in zap_chans:
                 rficmd = rficmd + f" -z {clo} {chi}"
         file.write(rficmd+"\n")
@@ -158,7 +158,9 @@ def main(args):
             name = f"{basename}_{cstart:05d}_{cstop:05d}.fil"
 
 
-            grab_subband(filename, path, name, chanstart = cstart, chanpersub = band)
+            #grab_subband(filename, path, name, chanstart = cstart, chanpersub = band)
+            subcmd = f"subband_filterbank.py -f {filename} -c {cstart} -b {band} -o {path} -n {name}"
+            file.write(subcmd + "\n")
 
             filename = os.path.join(path, name)
 
@@ -167,9 +169,9 @@ def main(args):
                 rficmd = rficmd + " -p"
             if iqr_filter == True:
                 rficmd = rficmd + " -i"
-            if zap_chans:
-                for clo,chi in zap_chans:
-                    rficmd = rficmd + f" -z {clo} {chi}"
+            #if zap_chans: TO DO: properly convert the channels during the sub-band search
+            #    for clo,chi in zap_chans:
+            #        rficmd = rficmd + f" -z {clo} {chi}"
             file.write(rficmd+"\n")
             maskpath = os.path.join(outdir,mask_name)+".bad_chans"
             heimdallcmd = f"launch_heimdall.py -f {filename} -o {outdir} -dm {dm[0]} {dm[1]} -m {maskpath} -box_max {boxcar_max} -dm_tol {dm_tolerance}"
