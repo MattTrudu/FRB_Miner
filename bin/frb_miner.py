@@ -4,7 +4,7 @@ import sys
 import numpy as np
 import yaml
 import argparse
-from utils import mkdir_p
+from utils import grab_subband
 
 def main(args):
     configfile = args.config
@@ -59,6 +59,9 @@ def main(args):
     file = open(filepipeline, "w")
 
     if slurm:
+        """ 
+        # This is really for the OACa cluster, be careful 
+        """
         n_nodes = config_data['n_nodes']
         n_cpu = config_data['n_cpu']
         computing_time = config_data['computing_time']
@@ -81,9 +84,7 @@ def main(args):
 
     if subband_search == False:
         dirname =  os.path.splitext(os.path.basename(filename))[0]
-        #print(dirname)
         outdir = os.path.join(outdir, dirname)
-        #mkdir_p(outdir)
         file.write(f"mkdir {outdir}\n")
         rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -tstart {time_start} -ngulp {nsamps_gulpr} -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
         if plot == True:
@@ -134,7 +135,84 @@ def main(args):
         file.write(ploth5cmd+"\n")
         #file.write(f"rm -f {outdir}/*.h5 \n")
         file.write(f"rm -f {outdir}/*.log \n")
+    if subband_search == True:
+        dirname =  os.path.splitext(os.path.basename(filename))[0]
+        outdir = os.path.join(outdir, dirname)
+        file.write(f"mkdir {outdir}\n") 
+        channels = config_data['channels']
+        for chans in channels:
 
+            cstart, cstop = chans[0], chans[1]    
+            band = cstop - cstart 
+
+            subname = f"sub_{cstart:05d}_{cstop:05d}"
+            outdir  = os.path.join(outdir, subname) 
+            file.write(f"mkdir {outdir}\n")
+
+
+            # Get the directory path
+            path = os.path.dirname(filename)
+
+            # Get the filename without extension
+            basename = os.path.splitext(os.path.basename(filename))[0]
+            name = f"{basename}_{cstart:05d}_{cstop:05d}.fil"
+
+
+            grab_subband(filename, path, name, chanstart = cstart, chanpersub = band)
+
+            filename = os.path.join(path, name)
+
+            rficmd = f"rfi_zapper.py -f {filename} -o {outdir} -n {mask_name} -tstart {time_start} -ngulp {nsamps_gulpr} -sksig {sk_sigma} -sgsig {sg_sigma} -sgwin {sg_window}"
+            if plot == True:
+                rficmd = rficmd + " -p"
+            if iqr_filter == True:
+                rficmd = rficmd + " -i"
+            if zap_chans:
+                for clo,chi in zap_chans:
+                    rficmd = rficmd + f" -z {clo} {chi}"
+            file.write(rficmd+"\n")
+            maskpath = os.path.join(outdir,mask_name)+".bad_chans"
+            heimdallcmd = f"launch_heimdall.py -f {filename} -o {outdir} -dm {dm[0]} {dm[1]} -m {maskpath} -box_max {boxcar_max} -dm_tol {dm_tolerance}"
+            if nsamps_gulp != 'None':
+                heimdallcmd = heimdallcmd + f" -ngulp {nsamps_gulp}"
+            if fswap != 'None':
+                heimdallcmd = heimdallcmd + f" -fswap {fswap}"
+            if baseline_length != 'None':
+                heimdallcmd = heimdallcmd + f" -base_len {baseline_length}"
+            if rfi_no_narrow != 'None':
+                heimdallcmd = heimdallcmd + f" -rfi_no_narrow"
+            if rfi_no_broad != 'None':
+                heimdallcmd = heimdallcmd + f" -rfi_no_broad"
+            if no_scrunching != 'None':
+                heimdallcmd = heimdallcmd + f" -no_scrunching"
+            if rfi_tol != 'None':
+                heimdallcmd = heimdallcmd + f" -rfi_tol {rfi_tol}"
+            if scrunching_tol != 'None':
+                heimdallcmd = heimdallcmd + f" -scrunch_tol {scrunching_tol}"
+            file.write(heimdallcmd+"\n")
+            prepcmd = f"prepare_for_fetch.py -f {filename} -o {outdir} -c {outdir} -d {dmf[0]} {dmf[1]} -s {snr} -n {n_members}"
+            file.write(prepcmd+"\n")
+            cand = os.path.join(outdir,"*.cand")
+            file.write(f"rm -f {cand}"+"\n")
+            csvpath = os.path.join(outdir, "cand_forfetch.csv")
+            if slurm:
+                candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir} -n {n_cpu} -ts 256 -r -sksig {sk_sigma} -sgsig {sg_sigma} -sgfw {sg_window}"
+            else:
+                candmakercmd = f"your_candmaker.py -c {csvpath} -o {outdir} -ts 256 -r -sksig {sk_sigma} -sgsig {sg_sigma} -sgfw {sg_window}"
+            file.write(candmakercmd + "\n")
+            for mod in model:
+                fetchcmd = f"predict.py -c {outdir} -m {mod} -p {probability}"
+                file.write(fetchcmd+"\n")
+            #results = os.path.join(outdir, f"results_{model}.csv" )
+            if slurm:
+                ploth5cmd = f"your_h5plotter.py -f {outdir}/*.h5 -o {outdir}/ -n {n_cpu} -mad"
+            else:
+                ploth5cmd = f"your_h5plotter.py -f {outdir}/*.h5 -o {outdir}/ -mad"
+            file.write(ploth5cmd+"\n")
+            #file.write(f"rm -f {outdir}/*.h5 \n")
+            file.write(f"rm -f {outdir}/*.log \n")
+    
+    
     file.close()
 
 

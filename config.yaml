@@ -9,10 +9,9 @@ computing_time: 2:00:00
 
 
 #Sub-banded search
-subband_search: False
+subband_search: True
 channels: [[0,128],[128,256]]
-band_threshold: 100
-overlap: True
+
 
 #RFI Exicision
 mask_name: "mask"
