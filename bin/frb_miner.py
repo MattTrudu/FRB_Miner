@@ -98,12 +98,14 @@ def main(args):
                 rficmd = rficmd + f" -z {clo} {chi}"
         file.write(rficmd+"\n")
         maskpath = os.path.join(outdir,mask_name)+".bad_chans"
+        heimdallcmd = f"launch_heimdall.py -f {filename} -o {outdir} -dm {dm[0]} {dm[1]} -box_max {boxcar_max} -dm_tol {dm_tolerance}"  
+         
         try:
             mask = np.loadtxt(maskpath)
             if mask.size == 0:
-                heimdallcmd = f"launch_heimdall.py -f {filename} -o {outdir} -dm {dm[0]} {dm[1]} -box_max {boxcar_max} -dm_tol {dm_tolerance}"
+                heimdallcmd = heimdallcmd
             else:
-                heimdallcmd = f"launch_heimdall.py -f {filename} -o {outdir} -dm {dm[0]} {dm[1]} -m {maskpath} -box_max {boxcar_max} -dm_tol {dm_tolerance}"    
+                heimdallcmd = heimdallcmd + f"-m {maskpath}" 
         if nsamps_gulp != 'None':
             heimdallcmd = heimdallcmd + f" -ngulp {nsamps_gulp}"
         if fswap != 'None':
