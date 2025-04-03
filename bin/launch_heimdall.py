@@ -7,7 +7,22 @@ import argparse
 import numpy as np
 import your
 import subprocess
-from utils import cluster_channels
+
+
+
+def cluster_channels(badchans):
+
+    maxgap = 1
+    badchans.sort()
+    groups = [[badchans[0]]]
+    for x in badchans[1:]:
+        if abs(x - groups[-1][-1]) <= maxgap:
+            groups[-1].append(x)
+        else:
+            groups.append([x])
+    return groups
+
+
 
 
 def launch_heimdall(filename,
