@@ -1,8 +1,9 @@
+#!/usr/bin/env python
 import sys
 import os
-import itertools
+import itertools 
 import numpy as np
-from sigpyproc.Readers import FilReader
+
 
 def mkdir_p(path):
 
@@ -142,34 +143,3 @@ def plan_subbands(filename, fthresh = 100, overlap=False, save = True, output_di
             else:
                 return subbands
             #np.savetxt(os.path.join(output_dir, output_name.replace(".npy",".txt")),subbands)
-
-
-def grab_subband(filename, outdir, outname, chanstart = 0, chanpersub = 1):
-
-
-    basename = os.path.basename(filename)
-    root     = os.path.splitext(basename)[0]
-
-    fil = FilReader("%s"%filename)
-    gulp = 1024
-    back_compatible = True
-
-
-    fstart = fil.header.fch1 + chanstart*fil.header.foff
-    #print(fstart)
-    name = os.path.join(outdir, outname)
-    out_file = fil.header.prepOutfile(name,updates= {"nchans":chanpersub, "fch1": fstart}, nbits = fil.header.nbits, back_compatible = back_compatible)
-
-
-    for nsamps, ii, data in fil.readPlan(gulp):
-        #for out_file in enumerate(out_files):
-            data = data.reshape(nsamps, fil.header.nchans)
-            subband_ar = data[:,chanstart:chanstart+chanpersub]
-            out_file.cwrite(subband_ar.ravel())
-
-
-    out_file.close()
-
-
-
-    return out_file.name
