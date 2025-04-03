@@ -112,23 +112,27 @@ def launch_heimdall(filename,
 
     if mask:
 
-        mask = np.loadtxt(mask, dtype=np.int32)
+        try:
 
-        if len(mask.shape) == 1:
-            badchans = mask
-        else:
-            logging.warning(
-                "RFI mask not understood, can only be 1D. Not using RFI flagging."
-            )
-            badchans = None
+            mask = np.loadtxt(mask, dtype=np.int32)
 
-        if badchans is not None:
+            if len(mask.shape) == 1:
+                badchans = mask
+            else:
+                logging.warning(
+                    "RFI mask not understood, can only be 1D. Not using RFI flagging."
+                )
+                badchans = None
+            if mask.size == 0:
+                cmd = cmd 
+            else:    
+                if badchans is not None:
 
-            groups = cluster_channels(badchans)
+                    groups = cluster_channels(badchans)
 
-            for group in groups:
+                    for group in groups:
 
-                cmd = cmd + f" -zap_chans {np.min(group)} {np.max(group)}"
+                        cmd = cmd + f" -zap_chans {np.min(group)} {np.max(group)}"
 
 
     return cmd
