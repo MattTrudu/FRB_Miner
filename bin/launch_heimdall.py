@@ -23,24 +23,22 @@ def cluster_channels(badchans):
     return groups
 
 
-
-
 def launch_heimdall(filename,
-                    dm_tol = None,
-                    ngulp = None,
-                    boxcar_max = None,
-                    baseline_length = None,
-                    DM = None,
-                    mask = None,
-                    rfi_no_narrow = None,
-                    rfi_no_broad = None,
-                    no_scrunching = None,
-                    rfi_tol = None,
-                    gpu_id = None,
-                    verbosity = None,
-                    scrunch_tol = None,
-                    outdir = None,
-                    fswap = False):
+                    dm_tol=None,
+                    ngulp=None,
+                    boxcar_max=None,
+                    baseline_length=None,
+                    DM=None,
+                    mask=None,
+                    rfi_no_narrow=None,
+                    rfi_no_broad=None,
+                    no_scrunching=None,
+                    rfi_tol=None,
+                    gpu_id=None,
+                    verbosity=None,
+                    scrunch_tol=None,
+                    outdir=None,
+                    fswap=False):
 
     filfile = your.Your(filename)
 
@@ -52,90 +50,76 @@ def launch_heimdall(filename,
     tstartutc = filfile.your_header.tstart_utc
 
     bw = nchan * foff
-    fc = fch0 + bw/2
-    obslen = nsamp*tsamp
-
+    fc = fch0 + bw / 2
+    obslen = nsamp * tsamp
 
     cmd = "heimdall"
-
-    cmd = cmd + f" -f {filename}"
+    cmd += f" -f {filename}"
 
     if DM:
         if DM[1] < DM[0]:
-            logging.warning(
-                "Second DM value is less than the first: swapping..."
-            )
-
-        cmd = cmd + f" -dm {np.min(DM)} {np.max(DM)}"
+            logging.warning("Second DM value is less than the first: swapping...")
+        cmd += f" -dm {min(DM)} {max(DM)}"
 
     if baseline_length:
-
-        cmd = cmd + f" -baseline_length {baseline_length}"
+        cmd += f" -baseline_length {baseline_length}"
 
     if boxcar_max:
-        bmax = boxcar_max * 10**(-3) #conversion in seconds
-        bmax = np.rint(bmax / tsamp).astype(np.int32)
-        cmd = cmd + f" -boxcar_max {bmax}"
+        bmax = int(np.rint((boxcar_max * 1e-3) / tsamp))  # boxcar_max in ms -> bins
+        cmd += f" -boxcar_max {bmax}"
 
     if ngulp:
-        cmd = cmd + f" -nsamps_gulp {ngulp}"
+        cmd += f" -nsamps_gulp {ngulp}"
 
-    if fswap == True:
-        cmd = cmd + f" -fswap"
+    if fswap:
+        cmd += " -fswap"
 
     if rfi_tol:
-        cmd = cmd + f" -rfi_tol {rfi_tol}"
+        cmd += f" -rfi_tol {rfi_tol}"
 
     if rfi_no_narrow:
-        cmd = cmd + f" -rfi_no_narrow"
+        cmd += " -rfi_no_narrow"
 
     if rfi_no_broad:
-        cmd = cmd + f" -rfi_no_broad"
+        cmd += " -rfi_no_broad"
 
     if no_scrunching:
-        cmd = cmd + f" -no_scrunching"
+        cmd += " -no_scrunching"
 
     if dm_tol:
-        cmd = cmd + f" -dm_tol {dm_tol}"
+        cmd += f" -dm_tol {dm_tol}"
 
     if gpu_id:
-        cmd = cmd + f" -gpu_id {gpu_id}"
+        cmd += f" -gpu_id {gpu_id}"
 
     if verbosity:
-        cmd = cmd + f" -{verbosity}"
+        cmd += f" -{verbosity}"
 
     if outdir:
-        cmd = cmd + f" -output_dir {outdir}"
+        cmd += f" -output_dir {outdir}"
 
     if scrunch_tol:
-        cmd = cmd + f" -output_dir {scrunch_tol}"
+        cmd += f" -scrunch_tol {scrunch_tol}"  # FIX: previously was -output_dir again!
 
     if mask:
-
         try:
+            mask_data = np.loadtxt(mask, dtype=np.int32)
 
-            mask = np.loadtxt(mask, dtype=np.int32)
-
-            if len(mask.shape) == 1:
-                badchans = mask
+            if mask_data.size == 0:
+                pass  # empty mask; do nothing
+            elif len(mask_data.shape) == 1:
+                badchans = mask_data
+                groups = cluster_channels(badchans)  # assume this groups adjacent channels
+                for group in groups:
+                    cmd += f" -zap_chans {np.min(group)} {np.max(group)}"
             else:
-                logging.warning(
-                    "RFI mask not understood, can only be 1D. Not using RFI flagging."
-                )
-                badchans = None
-            if mask.size == 0:
-                cmd = cmd 
-            else:    
-                if badchans is not None:
-
-                    groups = cluster_channels(badchans)
-
-                    for group in groups:
-
-                        cmd = cmd + f" -zap_chans {np.min(group)} {np.max(group)}"
-
+                logging.warning("RFI mask not understood; expected 1D. Ignoring.")
+        except Exception as e:
+            logging.warning(f"Failed to parse RFI mask file: {e}")
 
     return cmd
+
+
 
 def _get_parser():
     """
