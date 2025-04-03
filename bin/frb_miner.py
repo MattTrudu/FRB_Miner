@@ -91,7 +91,9 @@ def main(args):
             rficmd = rficmd + " -p"
         if iqr_filter == True:
             rficmd = rficmd + " -i"
-        if zap_chans != 'None':
+        if zap_chans == 'None':
+            rficmd = rficmd
+        else:    
             for clo,chi in zap_chans:
                 rficmd = rficmd + f" -z {clo} {chi}"
         file.write(rficmd+"\n")
